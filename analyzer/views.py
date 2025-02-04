@@ -34,9 +34,6 @@ from datetime import datetime, timedelta, timezone
 import pickle
 import xgboost as xgb
 from django.http import JsonResponse
-from transformers import AutoModelForSequenceClassification, AlbertTokenizer
-import torch
-import torch.nn as nn
 from django.conf import settings
 
 OKX_API_KEY = settings.OKX_API_KEY
