@@ -37,7 +37,7 @@ from django.http import JsonResponse
 from django.conf import settings
 
 OKX_API_KEY = settings.OKX_API_KEY
-OKX_API_SECRET_KEY = settings.OKX_API_SECRET_KEY
+OKX_API_SECRET_KEY = settings.OKX_SECRET_KEY
 OKX_API_PASSPHRASE = settings.OKX_API_PASSPHRASE
 OPENAI_API_KEY = settings.OPENAI_API_KEY
 
