@@ -1,0 +1,337 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<title>💰 후원하기</title>
+
+<style>
+    .donation-container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: #1a1a1a;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0px 4px 8px rgba(255, 255, 255, 0.1);
+        color: white;
+        text-align: center;
+    }
+
+    h2 {
+        font-size: 26px;
+        font-weight: bold;
+        color: #f8d210;
+    }
+
+    .donation-description {
+        margin: 20px 0;
+        font-size: 16px;
+        line-height: 1.6;
+        color: #ccc;
+        text-align: left;
+    }
+
+    .crypto-section {
+        background: #222;
+        padding: 15px;
+        border-radius: 8px;
+        margin-top: 15px;
+        text-align: left;
+    }
+
+    /* Cryptocurrency Header Style */
+    .crypto-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .crypto-header img {
+        width: 24px;
+        height: 24px;
+    }
+
+    .crypto-header h3 {
+        font-size: 18px;
+        color: #f8d210;
+        margin-bottom: 10px;
+    }
+
+    .crypto-address {
+        background: #333;
+        padding: 10px;
+        border-radius: 6px;
+        font-size: 14px;
+        color: #fff;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        word-break: break-all;
+    }
+
+    .copy-btn {
+        background: #007bff;
+        border: none;
+        color: white;
+        padding: 8px 12px;
+        font-size: 14px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background 0.3s ease-in-out;
+    }
+
+    .copy-btn:hover {
+        background: #0056b3;
+    }
+
+    .btn-donate {
+        background-color: #f8d210;
+        border: none;
+        padding: 12px;
+        font-size: 18px;
+        width: 100%;
+        margin-top: 20px;
+        border-radius: 8px;
+        transition: background 0.3s ease-in-out;
+        color: black;
+    }
+
+    .btn-donate:hover {
+        background-color: #caa30e;
+    }
+
+    /* 🔹 Improved Hamburger Menu */
+    .hamburger-menu {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        cursor: pointer;
+        z-index: 1100; /* Ensure it's on top */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 45px;
+        height: 45px;
+        background-color: rgba(50, 50, 50, 0.8); /* More visible */
+        border-radius: 8px;
+        padding: 8px;
+        transition: background 0.3s ease-in-out;
+    }
+
+    /* 🔹 Adjust bars for proper visibility */
+    .hamburger-menu div {
+        width: 35px;
+        height: 4px;
+        background-color: white;
+        margin: 5px 0; /* Proper spacing */
+        transition: 0.4s;
+    }
+
+    /* 🔹 Hover Effect */
+    .hamburger-menu:hover {
+        background-color: rgba(80, 80, 80, 0.9);
+    }
+
+    /* 🔹 Sidebar Styling (Fixed Overlapping Issue) */
+    .sidebar {
+        width: 260px;
+        height: 100vh;
+        position: fixed;
+        top: 0;
+        right: -280px; /* Initially hidden */
+        background-color: #121212;
+        color: white;
+        padding: 20px;
+        transition: right 0.4s ease-in-out;
+        box-shadow: -4px 0px 10px rgba(255, 255, 255, 0.2);
+        z-index: 1099; /* Below hamburger menu but above content */
+    }
+
+    /* 🔹 Sidebar Links */
+    .sidebar a {
+        display: block;
+        color: white;
+        padding: 15px;
+        text-decoration: none;
+        font-size: 18px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        transition: background 0.3s;
+    }
+
+    /* 🔹 Sidebar Hover Effect */
+    .sidebar a:hover {
+        background-color: #333;
+    }
+
+    /* 🔹 Close Button */
+    .close-btn {
+        font-size: 25px;
+        position: absolute;
+        top: 10px;
+        right: 20px;
+        cursor: pointer;
+    }
+
+    /* 🔹 When Sidebar is Open */
+    .show-sidebar {
+        right: 0;
+    }
+
+    /* 🔹 Ensure Main Content Moves Slightly When Sidebar Opens */
+    body.sidebar-open .container {
+        margin-right: 260px; /* Push content slightly to prevent overlap */
+        transition: margin-right 0.4s ease-in-out;
+    }
+
+    /* 🔹 Responsive Fix */
+    @media (max-width: 768px) {
+        .sidebar {
+            width: 240px;
+        }
+        body.sidebar-open .container {
+            margin-right: 0; /* On small screens, no need to shift content */
+        }
+    }
+
+    /* Sidebar Icon Styling */
+    .sidebar a img.sidebar-icon {
+        width: 16px;  /* Smaller width */
+        height: 16px; /* Smaller height */
+        margin-right: 3px; /* Adds slight spacing between icon and text */
+        vertical-align: middle; /* Aligns the icon with text */
+    }
+
+</style>
+
+<div class="container my-5">
+    <!-- ✅ Fixed Hamburger Menu Icon -->
+    <div class="hamburger-menu" onclick="toggleSidebar()">
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+
+    <!-- ✅ Sidebar Navigation -->
+    <div id="sidebar" class="sidebar">
+        <span class="close-btn" onclick="toggleSidebar()">✖</span>
+        <a href="{% url 'home' %}">🏠 Home</a>
+        <a href="{% url 'support' %}">❤️ 후원</a>
+    </div>
+
+    <div class="donation-container">
+        <h2>💰 후원하기</h2>
+        <p class="donation-description">
+            소중한 후원에 진심으로 감사드립니다!<br>
+            후원금은 프로젝트의 운영, 개발 및 유지보수에 소중히 사용됩니다.<br>
+            또한, 비트코인 시계열 예측 연구 등 더욱 발전된 기술 개발을 위해 활용될 예정입니다.<br>
+            작은 정성 하나하나가 큰 힘이 됩니다. 🙏
+        </p>
+
+        <!-- 비트코인 -->
+        <div class="crypto-section">
+            <div class="crypto-header">
+                <img src="{% static 'btc.png' %}" alt="BTC">
+                <h3>비트코인 (BTC)</h3>
+            </div>
+            <div class="crypto-address">
+                <span id="btc-address">19nr3xYe4M7o4XMfS7ggAe9vDwrxrCFAjv</span>
+                <button class="copy-btn" onclick="copyToClipboard('btc-address')">📋 복사</button>
+            </div>
+        </div>
+
+        <!-- 이더리움 -->
+        <div class="crypto-section">
+            <div class="crypto-header">
+                <img src="{% static 'eth.png' %}" alt="ETH">
+                <h3>이더리움 (ETH)</h3>
+            </div>
+            <div class="crypto-address">
+                <span id="eth-address">0x6E8960fb316C7202CbFe4277bBc30e9f95443bdf</span>
+                <button class="copy-btn" onclick="copyToClipboard('eth-address')">📋 복사</button>
+            </div>
+        </div>
+
+        <!-- 솔라나 -->
+        <div class="crypto-section">
+            <div class="crypto-header">
+                <img src="{% static 'sol.png' %}" alt="SOL">
+                <h3>솔라나 (SOL)</h3>
+            </div>
+            <div class="crypto-address">
+                <span id="sol-address">J73Esg3ntk5z5MuNRCRXAHmY3Z5nnAx5he22vAkpzXv2</span>
+                <button class="copy-btn" onclick="copyToClipboard('sol-address')">📋 복사</button>
+            </div>
+        </div>
+
+        <!-- USDT TRC-20 -->
+        <div class="crypto-section">
+            <div class="crypto-header">
+                <img src="{% static 'usdt_trc.png' %}" alt="USDT">
+                <h3>테더 (USDT TRC-20)</h3>
+            </div>
+            <div class="crypto-address">
+                <span id="usdt-trc-address">TXWWs25cpduAYocsnMRedpZPC2z7r78X5b</span>
+                <button class="copy-btn" onclick="copyToClipboard('usdt-trc-address')">📋 복사</button>
+            </div>
+        </div>
+
+        <!-- USDT ERC-20 -->
+        <div class="crypto-section">
+            <div class="crypto-header">
+                <img src="{% static 'usdt_erc.png' %}" alt="USDT">
+                <h3>테더 (USDT ERC-20)</h3>
+            </div>
+            <div class="crypto-address">
+                <span id="usdt-erc-address">0x6E8960fb316C7202CbFe4277bBc30e9f95443bdf</span>
+                <button class="copy-btn" onclick="copyToClipboard('usdt-erc-address')">📋 복사</button>
+            </div>
+        </div>
+
+        <!-- USDC TRC-20 -->
+        <div class="crypto-section">
+            <div class="crypto-header">
+                <img src="{% static 'usdc.png' %}" alt="USDT">
+                <h3>유에스디코인 (USDC TRC-20)</h3>
+            </div>
+            <div class="crypto-address">
+                <span id="usdc-trc-address">TXWWs25cpduAYocsnMRedpZPC2z7r78X5b</span>
+                <button class="copy-btn" onclick="copyToClipboard('usdt-erc-address')">📋 복사</button>
+            </div>
+        </div>
+
+        <!-- USDC ERC-20 -->
+        <div class="crypto-section">
+            <div class="crypto-header">
+                <img src="{% static 'usdc.png' %}" alt="USDT">
+                <h3>유에스디코인 (USDC ERC-20)</h3>
+            </div>
+            <div class="crypto-address">
+                <span id="usdc-erc-address">0x6E8960fb316C7202CbFe4277bBc30e9f95443bdf</span>
+                <button class="copy-btn" onclick="copyToClipboard('usdt-erc-address')">📋 복사</button>
+            </div>
+        </div>
+
+        <button class="btn-donate">🙏 후원 감사합니다!</button>
+    </div>
+</div>
+
+<script>
+    // ✅ Sidebar Toggle Function
+    function toggleSidebar() {
+        const sidebar = document.getElementById("sidebar");
+        sidebar.classList.toggle("show-sidebar");
+    }
+
+
+
+    function copyToClipboard(id) {
+        var copyText = document.getElementById(id).innerText;
+        navigator.clipboard.writeText(copyText).then(() => {
+            alert("📋 주소가 복사되었습니다: " + copyText);
+        }).catch(err => {
+            console.error("복사 실패:", err);
+        });
+    }
+</script>
+
+{% endblock %}
