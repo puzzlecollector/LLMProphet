@@ -1,0 +1,771 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load custom_filters %}
+{% block content %}
+<style>
+/* Directional Prediction Styling */
+.direction-container {
+    margin-top: 20px;
+    text-align: left;
+}
+
+.long-text {
+    color: green;
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+.short-text {
+    color: red;
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+/* Centering the TradingView Widget */
+.chart-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin: 20px auto;
+}
+
+/* Analysis Section */
+.analysis-container {
+    background: #1a1a1a;
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 20px;
+    box-shadow: 0px 4px 8px rgba(255, 255, 255, 0.1);
+}
+
+/* Probability Container */
+.probability-container {
+    margin-top: 30px;
+    text-align: center;
+    background: #1c1c1c;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Probability Header */
+.probability-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.probability-header h2 {
+    font-size: 22px;
+    font-weight: bold;
+    color: white;
+}
+
+/* OKX Logo - Hover Effect */
+.okx-logo {
+    width: 35px;
+    height: 35px;
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+
+/* Slight Scaling & Opacity Change on Hover */
+.okx-logo:hover {
+    transform: scale(1.1);  /* Slightly enlarges the logo */
+    opacity: 0.8;  /* Reduces opacity to indicate interactivity */
+    cursor: pointer;  /* Changes the cursor to indicate it's clickable */
+}
+
+/* Probability Grid - More Flexible */
+.probability-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+    max-width: 100%;
+}
+
+/* Probability Card - Keep a Fixed Min Width */
+.probability-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 140px;
+    min-width: 120px;
+    background: #222;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    position: relative;
+    transition: transform 0.3s ease-in-out;
+}
+
+/* Ensure Cards Don't Shrink */
+.probability-card:hover {
+    transform: scale(1.05);
+}
+
+/* Radial Progress - Ensure Circular Shape Maintains */
+.radial-progress {
+    width: 90px;
+    height: 90px;
+    min-width: 80px;
+    max-width: 100px;
+    border-radius: 50%;
+    background: conic-gradient(
+        var(--progress-color) calc(var(--progress-value) * 1%),
+        #333 calc(var(--progress-value) * 1%)
+    );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    transition: all 0.5s ease-in-out;
+}
+
+/* Styling for Long and Short */
+.long {
+    --progress-color: #32CD32;
+}
+
+.short {
+    --progress-color: #FF4500;
+}
+
+/* Timeframe Label */
+.timeframe {
+    margin-top: 10px;
+    font-weight: bold;
+    color: white;
+}
+
+/* Tooltip - Now Appears ABOVE the Circle */
+.tooltip {
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    background: rgba(255, 255, 255, 0.9);
+    color: black;
+    padding: 6px 12px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 5px;
+    bottom: 120%; /* Moves tooltip **above** the circular chart */
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+    pointer-events: none;
+}
+
+/* Ensure Tooltip Appears on Hover */
+.probability-card:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* ✅ Responsive Fix for Smaller Screens */
+@media (max-width: 768px) {
+    .probability-grid {
+        grid-template-columns: repeat(2, 1fr); /* Ensure 2 per row on small screens */
+        gap: 15px;
+    }
+    .probability-card {
+        width: 110px; /* Slightly smaller for mobile */
+        min-width: 100px;
+        padding: 10px;
+    }
+    .radial-progress {
+        width: 80px;
+        height: 80px;
+    }
+    .tooltip {
+        font-size: 12px;
+        bottom: 130%; /* Ensure tooltip is properly placed on mobile */
+    }
+}
+
+.like-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+#like-button {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background 0.3s;
+}
+
+#like-button:hover {
+    background-color: #ff3333;
+}
+
+#visitor-count-container {
+    display: inline-block;
+    background-color: #4CAF50; /* Green color */
+    color: white;
+    padding: 8px 15px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 5px;
+    border: none;
+    cursor: default; /* Indicates it's not clickable */
+    user-select: none; /* Prevents selection */
+    pointer-events: none; /* Completely disables click events */
+    transition: background 0.3s;
+}
+
+/* Like button pop and glow animation */
+@keyframes likePop {
+    0% { transform: scale(1); box-shadow: 0 0 5px rgba(255, 77, 77, 0.5); }
+    50% { transform: scale(1.2); box-shadow: 0 0 15px rgba(255, 77, 77, 0.8); }
+    100% { transform: scale(1); box-shadow: 0 0 5px rgba(255, 77, 77, 0.5); }
+}
+
+.like-pop {
+    animation: likePop 0.3s ease-in-out;
+}
+
+/* Social Icons */
+.social-icon {
+    width: 30px;
+    height: 30px;
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+
+/* Hover Effect */
+.social-icon:hover {
+    transform: scale(1.2);  /* Slightly enlarge on hover */
+    opacity: 0.8;
+}
+
+/* Like Button Pop and Glow Animation */
+@keyframes likePop {
+    0% { transform: scale(1); box-shadow: 0 0 5px rgba(255, 77, 77, 0.5); }
+    50% { transform: scale(1.2); box-shadow: 0 0 15px rgba(255, 77, 77, 0.8); }
+    100% { transform: scale(1); box-shadow: 0 0 5px rgba(255, 77, 77, 0.5); }
+}
+
+.like-pop {
+    animation: likePop 0.3s ease-in-out;
+}
+
+
+/* 🔹 Improved Hamburger Menu */
+.hamburger-menu {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+    z-index: 1100; /* Ensure it's on top */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    height: 45px;
+    background-color: rgba(50, 50, 50, 0.8); /* More visible */
+    border-radius: 8px;
+    padding: 8px;
+    transition: background 0.3s ease-in-out;
+}
+
+/* 🔹 Adjust bars for proper visibility */
+.hamburger-menu div {
+    width: 35px;
+    height: 4px;
+    background-color: white;
+    margin: 5px 0; /* Proper spacing */
+    transition: 0.4s;
+}
+
+/* 🔹 Hover Effect */
+.hamburger-menu:hover {
+    background-color: rgba(80, 80, 80, 0.9);
+}
+
+/* 🔹 Sidebar Styling (Fixed Overlapping Issue) */
+.sidebar {
+    width: 260px;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    right: -280px; /* Initially hidden */
+    background-color: #121212;
+    color: white;
+    padding: 20px;
+    transition: right 0.4s ease-in-out;
+    box-shadow: -4px 0px 10px rgba(255, 255, 255, 0.2);
+    z-index: 1099; /* Below hamburger menu but above content */
+}
+
+/* 🔹 Sidebar Links */
+.sidebar a {
+    display: block;
+    color: white;
+    padding: 15px;
+    text-decoration: none;
+    font-size: 18px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    transition: background 0.3s;
+}
+
+/* 🔹 Sidebar Hover Effect */
+.sidebar a:hover {
+    background-color: #333;
+}
+
+/* 🔹 Close Button */
+.close-btn {
+    font-size: 25px;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    cursor: pointer;
+}
+
+/* 🔹 When Sidebar is Open */
+.show-sidebar {
+    right: 0;
+}
+
+/* 🔹 Ensure Main Content Moves Slightly When Sidebar Opens */
+body.sidebar-open .container {
+    margin-right: 260px; /* Push content slightly to prevent overlap */
+    transition: margin-right 0.4s ease-in-out;
+}
+
+/* 🔹 Responsive Fix */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 240px;
+    }
+    body.sidebar-open .container {
+        margin-right: 0; /* On small screens, no need to shift content */
+    }
+}
+
+/* Sidebar Icon Styling */
+.sidebar a img.sidebar-icon {
+    width: 16px;  /* Smaller width */
+    height: 16px; /* Smaller height */
+    margin-right: 3px; /* Adds slight spacing between icon and text */
+    vertical-align: middle; /* Aligns the icon with text */
+}
+
+/* Tooltip Container */
+.tooltip-container {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    margin-left: 8px; /* Adds spacing between text and icon */
+}
+
+/* Tooltip Icon */
+.tooltip-icon {
+    font-size: 18px;
+    color: #aaa;
+    cursor: pointer;
+    transition: color 0.3s ease-in-out;
+}
+
+/* Change color on hover */
+.tooltip-container:hover .tooltip-icon {
+    color: white;
+}
+
+/* Tooltip Box */
+.tooltip-text {
+    visibility: hidden;
+    opacity: 0;
+    width: 250px;
+    background-color: rgba(255, 255, 255, 0.95);
+    color: black;
+    text-align: center;
+    padding: 10px;
+    border-radius: 6px;
+    position: absolute;
+    bottom: 140%; /* Moves tooltip above the icon */
+    left: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+    font-size: 14px;
+    font-weight: bold;
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+    white-space: normal; /* Allows text to wrap properly */
+    line-height: 1.4; /* Improves readability */
+}
+
+/* Tooltip Arrow */
+.tooltip-text::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -6px;
+    border-width: 6px;
+    border-style: solid;
+    border-color: rgba(255, 255, 255, 0.95) transparent transparent transparent;
+}
+
+/* Show Tooltip on Hover */
+.tooltip-container:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
+</style>
+
+<div class="container">
+    <!-- ✅ Fixed Hamburger Menu Icon -->
+    <div class="hamburger-menu" onclick="toggleSidebar()">
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+
+    <!-- ✅ Sidebar Navigation -->
+    <div id="sidebar" class="sidebar">
+        <span class="close-btn" onclick="toggleSidebar()">✖</span>
+        <a href="#">🏠 Home</a>
+        <a href="{% url 'support' %}">❤️ 후원</a>
+    </div>
+
+
+    <h1>비트코인 (BTC): AI 기반 시장 예측 <small style="color: black; font-size: 8px;">Powered by Django</small></h1>
+    <div class="like-container">
+        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+        <!-- 좋아요 버튼 -->
+        <button id="like-button">❤️ <span id="like-count"></span></button>
+        <!-- 누적 방문자 -->
+        <span id="visitor-count-container">조회수: <span id="visitor-count">{{ visitor_count }}</span></span>
+        <!-- Telegram Icon -->
+        <a href="https://t.me/aiphabtc_analyst_kr" target="_blank">
+            <img src="{% static 'telegram.png' %}" alt="Telegram" class="social-icon">
+        </a>
+        <!-- X (Twitter) Icon -->
+        <a href="https://x.com/aiphabtc11235" target="_blank">
+            <img src="{% static 'x.png' %}" alt="X (Twitter)" class="social-icon">
+        </a>
+    </div>
+
+    <div class="chart-container">
+        <!-- TradingView Widget BEGIN -->
+        <div class="tradingview-widget-container">
+          <div class="tradingview-widget-container__widget"></div>
+          <div class="tradingview-widget-copyright"><a href="https://kr.tradingview.com/" rel="noopener nofollow" target="_blank"><span class="blue-text">트레이딩뷰에서 시장 확인</span></a></div>
+          <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
+          {
+          "width": "900",
+          "height": "600",
+          "symbol": "OKX:BTCUSDT.P",
+          "timezone": "Etc/UTC",
+          "theme": "dark",
+          "style": "1",
+          "locale": "kr",
+          "gridColor": "rgba(0, 255, 0, 0.06)",
+          "withdateranges": true,
+          "range": "YTD",
+          "hide_side_toolbar": false,
+          "allow_symbol_change": true,
+          "details": true,
+          "calendar": false,
+          "studies": [
+            "STD;RSI"
+          ],
+          "support_host": "https://www.tradingview.com"
+        }
+          </script>
+        </div>
+        <!-- TradingView Widget END -->
+    </div>
+
+    <div class="analysis-container">
+        <div class="update-info">
+            <small><strong>📅 최근 업데이트:</strong> {{ last_updated }}</small><br>
+            <small>⏳ <em>분석은 매일 <strong>09:00 KST (00:00 UTC)</strong> 기준으로 자동 업데이트됩니다.</em></small><br>
+            <small>📊 <em>GPT봇은 <strong>일봉(1d) 차트</strong>와 <strong>실시간 속보</strong>를 기반으로 단기적 시장 분석을 수행합니다.</em></small><br>
+            <small>⚠️ <em>본 분석은 참고용으로만 활용해야 하며, 최종 투자 결정은 본인의 책임입니다.</em></small>
+        </div>
+
+        <div class="analysis">
+            <h2>📌 GPT봇 시장 분석</h2>
+            <p>{{ analysis }}</p>
+        </div>
+
+        <div class="direction-container">
+            <p>
+                <strong>📈 GPT봇 오늘의 방향성 예측:</strong>
+                <span class="{% if decision == 0 %}long-text{% else %}short-text{% endif %}">
+                    {% if decision == 0 %} Long 🚀 {% else %} Short 📉 {% endif %}
+                </span>
+            </p>
+        </div>
+    </div>
+
+    <div class="probability-container">
+        <div class="probability-header">
+            <a href="https://www.okx.com/trade-swap/btc-usdt-swap" target="_blank">
+                <img src="{% static 'okx.png' %}" alt="OKX Logo" class="okx-logo">
+            </a>
+            <h2 class="ml-header">
+                실시간 머신러닝 예측
+                <span class="tooltip-container">
+                    <i class="fas fa-circle-info tooltip-icon"></i>
+                    <span class="tooltip-text">
+                        본 모델은 XGBoost 기반의 고속 추론 기법을 활용하여 단기 차트 패턴을 분석하고 예측을 수행합니다. 현재 평균 예측 정확도는 약 55% 수준입니다.
+                    </span>
+                </span>
+            </h2>
+        </div>
+
+        <div class="probability-grid">
+            <div class="probability-card">
+                <div class="radial-progress" id="radial-progress-1m"></div>
+                <div class="timeframe">⏳ 1분봉</div>
+                <div class="tooltip">상승 {{ prob_1m_long }}% / 하락 {{ prob_1m_short }}%</div>
+            </div>
+
+            <div class="probability-card">
+                <div class="radial-progress" id="radial-progress-5m"></div>
+                <div class="timeframe">⏳ 5분봉</div>
+                <div class="tooltip">상승 {{ prob_5m_long }}% / 하락 {{ prob_5m_short }}%</div>
+            </div>
+
+            <div class="probability-card">
+                <div class="radial-progress" id="radial-progress-30m"></div>
+                <div class="timeframe">⏳ 30분봉</div>
+                <div class="tooltip">상승 {{ prob_30m_long }}% / 하락 {{ prob_30m_short }}%</div>
+            </div>
+
+            <div class="probability-card">
+                <div class="radial-progress" id="radial-progress-1h"></div>
+                <div class="timeframe">⏳ 1시간봉</div>
+                <div class="tooltip">상승 {{ prob_1h_long }}% / 하락 {{ prob_1h_short }}%</div>
+            </div>
+
+            <div class="probability-card">
+                <div class="radial-progress" id="radial-progress-4h"></div>
+                <div class="timeframe">⏳ 4시간봉</div>
+                <div class="tooltip">상승 {{ prob_4h_long }}% / 하락 {{ prob_4h_short }}%</div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="probability-container">
+        <div class="probability-header">
+            <a href="https://www.okx.com/trade-swap/btc-usdt-swap" target="_blank">
+                <img src="{% static 'okx.png' %}" alt="OKX Logo" class="okx-logo">
+            </a>
+            <h2 class="ml-header">
+                실시간 캔들 브레이크 아웃 확률
+                <span class="tooltip-container">
+                    <i class="fas fa-circle-info tooltip-icon"></i>
+                    <span class="tooltip-text">
+                        빗썸에서 활용하는 예측 차트와 같은 알고리즘으로 작동합니다. 직전 300개의 캔들 데이터를 실시간으로 분석하여 각 캔들의 상승과 하락 확률을 예측합니다. 상승 확률은 과거 300개의 캔들 중 이전 캔들의 고가를 다음 캔들이 돌파한 개수, 하락 확류은 이전 캔들의 저가를 다음 캔들이 돌파한 개수. 현재 평균 예측 정확도는 약 60% 수준입니다.
+                    </span>
+                </span>
+            </h2>
+        </div>
+
+        <div class="probability-grid">
+            <div class="probability-card">
+                <div class="radial-progress" id="bithumb-radial-progress-1m"></div>
+                <div class="timeframe">⏳ 1분봉</div>
+                <div class="tooltip">상승 {{ bithumb_1m_long }}% / 하락 {{ bithumb_1m_short }}%</div>
+            </div>
+
+            <div class="probability-card">
+                <div class="radial-progress" id="bithumb-radial-progress-5m"></div>
+                <div class="timeframe">⏳ 5분봉</div>
+                <div class="tooltip">상승 {{ bithumb_5m_long }}% / 하락 {{ bithumb_5m_short }}%</div>
+            </div>
+
+            <div class="probability-card">
+                <div class="radial-progress" id="bithumb-radial-progress-30m"></div>
+                <div class="timeframe">⏳ 30분봉</div>
+                <div class="tooltip">상승 {{ bithumb_30m_long }}% / 하락 {{ bithumb_30m_short }}%</div>
+            </div>
+
+            <div class="probability-card">
+                <div class="radial-progress" id="bithumb-radial-progress-1h"></div>
+                <div class="timeframe">⏳ 1시간봉</div>
+                <div class="tooltip">상승 {{ bithumb_1h_long }}% / 하락 {{ bithumb_1h_short }}%</div>
+            </div>
+
+            <div class="probability-card">
+                <div class="radial-progress" id="bithumb-radial-progress-4h"></div>
+                <div class="timeframe">⏳ 4시간봉</div>
+                <div class="tooltip">상승 {{ bithumb_4h_long }}% / 하락 {{ bithumb_4h_short }}%</div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+// ✅ Sidebar Toggle Function
+function toggleSidebar() {
+    const sidebar = document.getElementById("sidebar");
+    sidebar.classList.toggle("show-sidebar");
+}
+document.addEventListener("DOMContentLoaded", function() {
+    const sidebar = document.getElementById("sidebar");
+    const hamburger = document.querySelector(".hamburger-menu");
+
+    // Close if clicking outside the sidebar and not on the hamburger
+    if (!sidebar.contains(event.target) && !hamburger.contains(event.target)) {
+        sidebar.classList.remove("show-sidebar");
+    }
+
+    // fetch visitors
+    function fetchVisitors() {
+        fetch("/get-visitors/")
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("visitor-count").textContent = data.visitors;
+            })
+            .catch(error => console.error("❌ Error fetching visitor count:", error));
+    }
+
+    // ✅ Fetch likes count
+    function fetchLikes() {
+        fetch("/get-likes/")
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("like-count").textContent = data.likes;
+            })
+            .catch(error => console.error("❌ Error fetching likes:", error));
+    }
+
+    // ✅ Handle Like Button Click
+    const likeButton = document.getElementById("like-button");
+    if (likeButton) {
+        likeButton.addEventListener("click", function() {
+            fetch("/add-like/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": getCSRFToken()
+                },
+                body: JSON.stringify({})  // Empty body, needed for POST request
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("CSRF Token missing or invalid.");
+                }
+                return response.json();
+            })
+            .then(data => {
+                document.getElementById("like-count").textContent = data.likes;
+                // ✅ Add pop animation
+                likeButton.classList.add("like-pop");
+
+                // ✅ Remove animation after 300ms to allow re-triggering
+                setTimeout(() => {
+                    likeButton.classList.remove("like-pop");
+                }, 300);
+             })
+            .catch(error => console.error("❌ Error updating likes:", error));
+        });
+    } else {
+        console.warn("⚠️ Like button not found.");
+    }
+
+    // ✅ CSRF Token Extraction for Secure Requests
+    function getCSRFToken() {
+        let token = document.cookie.split("; ")
+            .find(row => row.startsWith("csrftoken="))
+            ?.split("=")[1];
+
+        if (!token) {
+            const csrfInput = document.querySelector("input[name='csrfmiddlewaretoken']");
+            if (csrfInput) {
+                token = csrfInput.value;
+            }
+        }
+        return token;
+    }
+
+    // ✅ Fetch and update probability values
+    function updateProbabilities() {
+        fetch('/get-xgb-predictions/')
+        .then(response => response.json())
+        .then(data => {
+            console.log("🔄 Fetching new probabilities...", data);
+
+            // ✅ Update XGBoost Probabilities
+            updateProgress("radial-progress-1m", data.predictions["prob_1m_long"], data.predictions["prob_1m_short"], data.timestamps["last_updated_xgb_1m"]);
+            updateProgress("radial-progress-5m", data.predictions["prob_5m_long"], data.predictions["prob_5m_short"], data.timestamps["last_updated_xgb_5m"]);
+            updateProgress("radial-progress-30m", data.predictions["prob_30m_long"], data.predictions["prob_30m_short"], data.timestamps["last_updated_xgb_30m"]);
+            updateProgress("radial-progress-1h", data.predictions["prob_1h_long"], data.predictions["prob_1h_short"], data.timestamps["last_updated_xgb_1h"]);
+            updateProgress("radial-progress-4h", data.predictions["prob_4h_long"], data.predictions["prob_4h_short"], data.timestamps["last_updated_xgb_4h"]);
+
+            // ✅ Update Bithumb Probabilities
+            updateProgress("bithumb-radial-progress-1m", data.predictions["bithumb_1m_up"], data.predictions["bithumb_1m_down"], data.timestamps["last_updated_bithumb_1m"]);
+            updateProgress("bithumb-radial-progress-5m", data.predictions["bithumb_5m_up"], data.predictions["bithumb_5m_down"], data.timestamps["last_updated_bithumb_5m"]);
+            updateProgress("bithumb-radial-progress-30m", data.predictions["bithumb_30m_up"], data.predictions["bithumb_30m_down"], data.timestamps["last_updated_bithumb_30m"]);
+            updateProgress("bithumb-radial-progress-1h", data.predictions["bithumb_1h_up"], data.predictions["bithumb_1h_down"], data.timestamps["last_updated_bithumb_1h"]);
+            updateProgress("bithumb-radial-progress-4h", data.predictions["bithumb_4h_up"], data.predictions["bithumb_4h_down"], data.timestamps["last_updated_bithumb_4h"]);
+        })
+        .catch(error => console.error('❌ Error fetching probabilities:', error));
+    }
+
+    // ✅ Function to Update Progress and Tooltip
+    function updateProgress(elementId, longProb, shortProb, lastUpdated) {
+        const progressElement = document.getElementById(elementId);
+        if (progressElement) {
+            longProb = parseFloat(longProb || 0).toFixed(1);
+            shortProb = parseFloat(shortProb || 0).toFixed(1);
+            lastUpdated = lastUpdated || "N/A";
+
+            console.log(`✅ Updating ${elementId} -> Long: ${longProb}%, Short: ${shortProb}% | Last Updated: ${lastUpdated}`);
+
+            // ✅ Update progress circle
+            progressElement.style.background = `conic-gradient(
+                ${longProb > 50 ? '#32CD32' : '#FF4500'} ${longProb}%,
+                #333 ${longProb}%
+            )`;
+            progressElement.textContent = `${longProb}%`;
+
+            // ✅ Update tooltip
+            const tooltipElement = progressElement.closest('.probability-card').querySelector('.tooltip');
+            if (tooltipElement) {
+                tooltipElement.innerHTML = `
+                    상승 ${longProb}% / 하락 ${shortProb}% <br>
+                    <strong>업데이트:</strong> ${lastUpdated}
+                `;
+            } else {
+                console.warn(`⚠️ Tooltip for ${elementId} not found.`);
+            }
+        } else {
+            console.warn(`⚠️ Radial progress element ${elementId} not found.`);
+        }
+    }
+
+
+    // ✅ Run update function every 10 seconds
+    setInterval(updateProbabilities, 10000);
+
+    // ✅ Load probabilities and likes when page loads
+    fetchVisitors();
+    fetchLikes();
+    updateProbabilities();
+});
+</script>
+{% endblock %}
