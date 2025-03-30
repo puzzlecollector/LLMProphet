@@ -446,19 +446,15 @@ body.sidebar-open .container {
     </div>
 
 
-    <h1>비트코인 (BTC): AI 기반 시장 예측 <small style="color: black; font-size: 8px;">Powered by Django</small></h1>
+    <h1>BTC 시황</h1>
     <div class="like-container">
         <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
         <!-- 좋아요 버튼 -->
         <button id="like-button">❤️ <span id="like-count"></span></button>
         <!-- 누적 방문자 -->
         <span id="visitor-count-container">조회수: <span id="visitor-count">{{ visitor_count }}</span></span>
-        <!-- Telegram Icon -->
-        <a href="https://t.me/aiphabtc_analyst_kr" target="_blank">
-            <img src="{% static 'telegram.png' %}" alt="Telegram" class="social-icon">
-        </a>
         <!-- X (Twitter) Icon -->
-        <a href="https://x.com/aiphabtc11235" target="_blank">
+        <a href="https://x.com/Bitcoin" target="_blank">
             <img src="{% static 'x.png' %}" alt="X (Twitter)" class="social-icon">
         </a>
     </div>
@@ -472,7 +468,7 @@ body.sidebar-open .container {
           {
           "width": "900",
           "height": "600",
-          "symbol": "OKX:BTCUSDT.P",
+          "symbol": "OKX:BTCUSDT",
           "timezone": "Etc/UTC",
           "theme": "dark",
           "style": "1",
@@ -496,125 +492,35 @@ body.sidebar-open .container {
 
     <div class="analysis-container">
         <div class="update-info">
-            <small><strong>📅 최근 업데이트:</strong> {{ last_updated }}</small><br>
-            <small>⏳ <em>분석은 매일 <strong>09:00 KST (00:00 UTC)</strong> 기준으로 자동 업데이트됩니다.</em></small><br>
-            <small>📊 <em>GPT봇은 <strong>일봉(1d) 차트</strong>와 <strong>실시간 속보</strong>를 기반으로 단기적 시장 분석을 수행합니다.</em></small><br>
-            <small>⚠️ <em>본 분석은 참고용으로만 활용해야 하며, 최종 투자 결정은 본인의 책임입니다.</em></small>
+            <small id="last-updated"><strong>📅 최근 업데이트:</strong> {{ last_updated }}</small><br>
+            <small>봇은 GPT-4o 기반이며 가장 최근 <a href="https://coinness.com/search?q=BTC&category=news" target="_blank" style="color: white; text-decoration: underline;">코인니스</a> 속보에서 중요 정보를 골라내어 시황 분석을 진행하고 있습니다.</small>
+            <small>본 분석은 참고용으로만 활용해야 하며, 최종 투자 결정은 본인의 주체로 진행하셔야 합니다.</small>
         </div>
 
         <div class="analysis">
-            <h2>📌 GPT봇 시장 분석</h2>
-            <p>{{ analysis }}</p>
+            <h2>속보 기반 단기 시장 분석</h2>
+            <p id="summary">분석 로딩중...</p>
+            <p id="sentiment">로딩중...</p>
         </div>
 
         <div class="direction-container">
             <p>
-                <strong>📈 GPT봇 오늘의 방향성 예측:</strong>
-                <span class="{% if decision == 0 %}long-text{% else %}short-text{% endif %}">
-                    {% if decision == 0 %} Long 🚀 {% else %} Short 📉 {% endif %}
-                </span>
+                <strong> 봇이 판단한 현재 BTC에 대한 투자 심리:</strong>
+                <span id="decision-text" class="">로딩중...</span>
             </p>
         </div>
     </div>
 
-    <div class="probability-container">
-        <div class="probability-header">
-            <a href="https://www.okx.com/trade-swap/btc-usdt-swap" target="_blank">
-                <img src="{% static 'okx.png' %}" alt="OKX Logo" class="okx-logo">
-            </a>
-            <h2 class="ml-header">
-                실시간 머신러닝 예측
-                <span class="tooltip-container">
-                    <i class="fas fa-circle-info tooltip-icon"></i>
-                    <span class="tooltip-text">
-                        본 모델은 XGBoost 기반의 고속 추론 기법을 활용하여 단기 차트 패턴을 분석하고 예측을 수행합니다. 현재 평균 예측 정확도는 약 55% 수준입니다.
-                    </span>
-                </span>
-            </h2>
-        </div>
-
-        <div class="probability-grid">
-            <div class="probability-card">
-                <div class="radial-progress" id="radial-progress-1m"></div>
-                <div class="timeframe">⏳ 1분봉</div>
-                <div class="tooltip">상승 {{ prob_1m_long }}% / 하락 {{ prob_1m_short }}%</div>
-            </div>
-
-            <div class="probability-card">
-                <div class="radial-progress" id="radial-progress-5m"></div>
-                <div class="timeframe">⏳ 5분봉</div>
-                <div class="tooltip">상승 {{ prob_5m_long }}% / 하락 {{ prob_5m_short }}%</div>
-            </div>
-
-            <div class="probability-card">
-                <div class="radial-progress" id="radial-progress-30m"></div>
-                <div class="timeframe">⏳ 30분봉</div>
-                <div class="tooltip">상승 {{ prob_30m_long }}% / 하락 {{ prob_30m_short }}%</div>
-            </div>
-
-            <div class="probability-card">
-                <div class="radial-progress" id="radial-progress-1h"></div>
-                <div class="timeframe">⏳ 1시간봉</div>
-                <div class="tooltip">상승 {{ prob_1h_long }}% / 하락 {{ prob_1h_short }}%</div>
-            </div>
-
-            <div class="probability-card">
-                <div class="radial-progress" id="radial-progress-4h"></div>
-                <div class="timeframe">⏳ 4시간봉</div>
-                <div class="tooltip">상승 {{ prob_4h_long }}% / 하락 {{ prob_4h_short }}%</div>
-            </div>
-
-        </div>
+    <div class="analysis-container" style="margin-top: 30px;">
+        <small><strong>📅 최근 업데이트:</strong></small> <small id="tech-last-updated">로딩중...</small><br>
+        <small>OKX 거래소의 1시간봉 BTC/USDT 데이터를 기반으로 기술적 분석을 수행하여, 비트코인의 최근 가격 흐름을 분석한 지표입니다. 주요 지표들을 활용하여 현재 시장이 상승 추세인지, 하락 추세인지 판단하는 데 유용한 정보를 제공합니다.</small>
+        <h2>Hourly Technicals</h2>
+        <h3>지표 종합 의견: <span id="tech-summary">로딩중...</span></h3>
+        <ul id="indicator-list"></ul>
+        <h3>이동 평균 분석: <span id="ma-summary">로딩중...</span></h3>
+        <ul id="ma-list"></ul>
     </div>
 
-    <div class="probability-container">
-        <div class="probability-header">
-            <a href="https://www.okx.com/trade-swap/btc-usdt-swap" target="_blank">
-                <img src="{% static 'okx.png' %}" alt="OKX Logo" class="okx-logo">
-            </a>
-            <h2 class="ml-header">
-                실시간 캔들 브레이크 아웃 확률
-                <span class="tooltip-container">
-                    <i class="fas fa-circle-info tooltip-icon"></i>
-                    <span class="tooltip-text">
-                        빗썸에서 활용하는 예측 차트와 같은 알고리즘으로 작동합니다. 직전 300개의 캔들 데이터를 실시간으로 분석하여 각 캔들의 상승과 하락 확률을 예측합니다. 상승 확률은 과거 300개의 캔들 중 이전 캔들의 고가를 다음 캔들이 돌파한 개수, 하락 확류은 이전 캔들의 저가를 다음 캔들이 돌파한 개수. 현재 평균 예측 정확도는 약 60% 수준입니다.
-                    </span>
-                </span>
-            </h2>
-        </div>
-
-        <div class="probability-grid">
-            <div class="probability-card">
-                <div class="radial-progress" id="bithumb-radial-progress-1m"></div>
-                <div class="timeframe">⏳ 1분봉</div>
-                <div class="tooltip">상승 {{ bithumb_1m_long }}% / 하락 {{ bithumb_1m_short }}%</div>
-            </div>
-
-            <div class="probability-card">
-                <div class="radial-progress" id="bithumb-radial-progress-5m"></div>
-                <div class="timeframe">⏳ 5분봉</div>
-                <div class="tooltip">상승 {{ bithumb_5m_long }}% / 하락 {{ bithumb_5m_short }}%</div>
-            </div>
-
-            <div class="probability-card">
-                <div class="radial-progress" id="bithumb-radial-progress-30m"></div>
-                <div class="timeframe">⏳ 30분봉</div>
-                <div class="tooltip">상승 {{ bithumb_30m_long }}% / 하락 {{ bithumb_30m_short }}%</div>
-            </div>
-
-            <div class="probability-card">
-                <div class="radial-progress" id="bithumb-radial-progress-1h"></div>
-                <div class="timeframe">⏳ 1시간봉</div>
-                <div class="tooltip">상승 {{ bithumb_1h_long }}% / 하락 {{ bithumb_1h_short }}%</div>
-            </div>
-
-            <div class="probability-card">
-                <div class="radial-progress" id="bithumb-radial-progress-4h"></div>
-                <div class="timeframe">⏳ 4시간봉</div>
-                <div class="tooltip">상승 {{ bithumb_4h_long }}% / 하락 {{ bithumb_4h_short }}%</div>
-            </div>
-        </div>
-    </div>
 
 </div>
 
@@ -632,6 +538,128 @@ document.addEventListener("DOMContentLoaded", function() {
     if (!sidebar.contains(event.target) && !hamburger.contains(event.target)) {
         sidebar.classList.remove("show-sidebar");
     }
+
+    fetchAnalysisData();  // 처음 로딩 시 실행
+    fetchTechnicalAnalysis(); // 처음 로딩 시 실행
+    const interval = setInterval(fetchAnalysisData, 5000);  // 5초마다 확인
+    const interval_technical = setInterval(fetchTechnicalAnalysis, 5000); // 5초마다 확인
+
+    function fetchAnalysisData() {
+        fetch("/get-btc-analysis/")
+            .then(response => response.json())
+            .then(data => {
+                // ✅ 로딩 중이면 문구를 보여주고 리턴
+                if (data.loading) {
+                    document.getElementById("summary").textContent = "분석 로딩중...";
+                    document.getElementById("sentiment").textContent = "로딩중...";
+                    document.getElementById("decision-text").textContent = "로딩중...";
+                    return;
+                }
+
+                // ✅ 분석 내용 DOM에 삽입
+                document.getElementById("summary").textContent = data.summary;
+                document.getElementById("sentiment").textContent = data.sentiment;
+                document.getElementById("last-updated").innerHTML = `<strong>📅 최근 업데이트:</strong> ${data.last_updated}`;
+
+                const decisionEl = document.getElementById("decision-text");
+                decisionEl.textContent = data.decision === 0 ? "Long" : "Short";
+                decisionEl.className = data.decision === 0 ? "long-text" : "short-text";
+
+                clearInterval(interval);  // 데이터 도착했으면 반복 종료
+            })
+            .catch(error => {
+                console.error("❌ GPT 분석 요청 실패:", error);
+            });
+    }
+
+    function fetchTechnicalAnalysis() {
+        fetch("/get-btc-technical-analysis/")
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("tech-last-updated").textContent = data.last_updated;
+
+                const techSummaryEl = document.getElementById("tech-summary");
+                techSummaryEl.textContent = data.indicator_summary;
+
+                // ✅ 지표 색상 적용
+                switch (data.indicator_summary) {
+                    case "Strong Buy":
+                        techSummaryEl.style.color = "darkgreen";
+                        break;
+                    case "Buy":
+                        techSummaryEl.style.color = "green";
+                        break;
+                    case "Strong Sell":
+                        techSummaryEl.style.color = "darkred";
+                        break;
+                    case "Sell":
+                        techSummaryEl.style.color = "red";
+                        break;
+                    default:
+                        techSummaryEl.style.color = "white";
+                }
+
+                const maSummaryEl = document.getElementById("ma-summary");
+                maSummaryEl.textContent = data.ma_summary;
+
+                // ✅ MA 색상도 적용
+                switch (data.ma_summary) {
+                    case "Strong Buy":
+                        maSummaryEl.style.color = "darkgreen";
+                        break;
+                    case "Buy":
+                        maSummaryEl.style.color = "green";
+                        break;
+                    case "Strong Sell":
+                        maSummaryEl.style.color = "darkred";
+                        break;
+                    case "Sell":
+                        maSummaryEl.style.color = "red";
+                        break;
+                    default:
+                        maSummaryEl.style.color = "white";
+                }
+
+                // ✅ 개별 지표 렌더링
+                const indicatorList = document.getElementById("indicator-list");
+                indicatorList.innerHTML = "";
+                data.indicators.forEach(ind => {
+                    const li = document.createElement("li");
+                    let color = "white";
+                    if (ind.action === "Buy") color = "green";
+                    else if (ind.action === "Sell") color = "red";
+
+                    li.innerHTML = `<strong>${ind.name}</strong>: ${ind.value} → <span style="font-weight:bold; color:${color};">${ind.action}</span>`;
+                    indicatorList.appendChild(li);
+                });
+
+                // ✅ 이동 평균 렌더링
+                const maList = document.getElementById("ma-list");
+                maList.innerHTML = "";
+                data.moving_averages.forEach(ma => {
+                    const li = document.createElement("li");
+
+                    // Helper to wrap action with color span
+                    const colorizeAction = (action) => {
+                        const color = action === "Buy" ? "green" : action === "Sell" ? "red" : "white";
+                        return `<span style="color:${color}; font-weight:bold;">${action}</span>`;
+                    };
+
+                    li.innerHTML = `
+                        <strong>${ma.name}</strong>:
+                        SMA: ${ma.sma} (${colorizeAction(ma.sma_action)}) /
+                        EMA: ${ma.ema} (${colorizeAction(ma.ema_action)})
+                    `;
+                    maList.appendChild(li);
+                });
+
+                clearInterval(interval_technical);  // 반복 중단
+            })
+            .catch(err => {
+                console.error("❌ 기술적 분석 요청 실패:", err);
+            });
+    }
+
 
     // fetch visitors
     function fetchVisitors() {
@@ -702,70 +730,9 @@ document.addEventListener("DOMContentLoaded", function() {
         return token;
     }
 
-    // ✅ Fetch and update probability values
-    function updateProbabilities() {
-        fetch('/get-xgb-predictions/')
-        .then(response => response.json())
-        .then(data => {
-            console.log("🔄 Fetching new probabilities...", data);
-
-            // ✅ Update XGBoost Probabilities
-            updateProgress("radial-progress-1m", data.predictions["prob_1m_long"], data.predictions["prob_1m_short"], data.timestamps["last_updated_xgb_1m"]);
-            updateProgress("radial-progress-5m", data.predictions["prob_5m_long"], data.predictions["prob_5m_short"], data.timestamps["last_updated_xgb_5m"]);
-            updateProgress("radial-progress-30m", data.predictions["prob_30m_long"], data.predictions["prob_30m_short"], data.timestamps["last_updated_xgb_30m"]);
-            updateProgress("radial-progress-1h", data.predictions["prob_1h_long"], data.predictions["prob_1h_short"], data.timestamps["last_updated_xgb_1h"]);
-            updateProgress("radial-progress-4h", data.predictions["prob_4h_long"], data.predictions["prob_4h_short"], data.timestamps["last_updated_xgb_4h"]);
-
-            // ✅ Update Bithumb Probabilities
-            updateProgress("bithumb-radial-progress-1m", data.predictions["bithumb_1m_up"], data.predictions["bithumb_1m_down"], data.timestamps["last_updated_bithumb_1m"]);
-            updateProgress("bithumb-radial-progress-5m", data.predictions["bithumb_5m_up"], data.predictions["bithumb_5m_down"], data.timestamps["last_updated_bithumb_5m"]);
-            updateProgress("bithumb-radial-progress-30m", data.predictions["bithumb_30m_up"], data.predictions["bithumb_30m_down"], data.timestamps["last_updated_bithumb_30m"]);
-            updateProgress("bithumb-radial-progress-1h", data.predictions["bithumb_1h_up"], data.predictions["bithumb_1h_down"], data.timestamps["last_updated_bithumb_1h"]);
-            updateProgress("bithumb-radial-progress-4h", data.predictions["bithumb_4h_up"], data.predictions["bithumb_4h_down"], data.timestamps["last_updated_bithumb_4h"]);
-        })
-        .catch(error => console.error('❌ Error fetching probabilities:', error));
-    }
-
-    // ✅ Function to Update Progress and Tooltip
-    function updateProgress(elementId, longProb, shortProb, lastUpdated) {
-        const progressElement = document.getElementById(elementId);
-        if (progressElement) {
-            longProb = parseFloat(longProb || 0).toFixed(1);
-            shortProb = parseFloat(shortProb || 0).toFixed(1);
-            lastUpdated = lastUpdated || "N/A";
-
-            console.log(`✅ Updating ${elementId} -> Long: ${longProb}%, Short: ${shortProb}% | Last Updated: ${lastUpdated}`);
-
-            // ✅ Update progress circle
-            progressElement.style.background = `conic-gradient(
-                ${longProb > 50 ? '#32CD32' : '#FF4500'} ${longProb}%,
-                #333 ${longProb}%
-            )`;
-            progressElement.textContent = `${longProb}%`;
-
-            // ✅ Update tooltip
-            const tooltipElement = progressElement.closest('.probability-card').querySelector('.tooltip');
-            if (tooltipElement) {
-                tooltipElement.innerHTML = `
-                    상승 ${longProb}% / 하락 ${shortProb}% <br>
-                    <strong>업데이트:</strong> ${lastUpdated}
-                `;
-            } else {
-                console.warn(`⚠️ Tooltip for ${elementId} not found.`);
-            }
-        } else {
-            console.warn(`⚠️ Radial progress element ${elementId} not found.`);
-        }
-    }
-
-
-    // ✅ Run update function every 10 seconds
-    setInterval(updateProbabilities, 10000);
-
     // ✅ Load probabilities and likes when page loads
     fetchVisitors();
     fetchLikes();
-    updateProbabilities();
 });
 </script>
 {% endblock %}

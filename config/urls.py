@@ -21,10 +21,11 @@ from analyzer import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('analyzer/', include('analyzer.urls')),
-    path('home/', views.index, name='home'),
-    path("get-xgb-predictions/", views.get_xgb_predictions_api, name="get_xgb_predictions_api"),
+    path('BTC/', views.index, name='home'),
     path("get-likes/", views.get_likes, name="get-likes"),
     path("add-like/", views.add_like, name="add-like"),
     path("get-visitors/", views.get_visitors, name="get-visitors"),
     path("support/", views.support_page, name="support"),
+    path("get-btc-analysis/", views.get_btc_analysis, name="get-btc-analysis"),
+    path("get-btc-technical-analysis/", views.get_btc_technical_analysis, name="get-btc-technical-analysis"),
 ]

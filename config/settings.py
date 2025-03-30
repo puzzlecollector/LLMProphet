@@ -28,8 +28,7 @@ SECRET_KEY = 'django-insecure-q=br@_0opw=sw5_458romki10#w0x3_qwgld&etz$u80y6*3g7
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["43.203.56.83"]
-
+ALLOWED_HOSTS = []
 
 # Application definition
 
@@ -134,5 +133,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 OKX_API_KEY = os.environ.get("OKX_API_KEY")
-OKX_SECRET_KEY = os.environ.get("OKX_SECRET_KEY")
+OKX_API_SECRET_KEY = os.environ.get("OKX_SECRET_KEY")
 OKX_API_PASSPHRASE = os.environ.get("OKX_API_PASSPHRASE")
