@@ -214,7 +214,7 @@
     <!-- ✅ Sidebar Navigation -->
     <div id="sidebar" class="sidebar">
         <span class="close-btn" onclick="toggleSidebar()">✖</span>
-        <a href="{% url 'home' %}">🏠 Home</a>
+        <a href="{% url 'home-page' %}">🏠 Home</a>
         <a href="{% url 'support' %}">❤️ 후원</a>
     </div>
 
@@ -223,7 +223,7 @@
         <p class="donation-description">
             소중한 후원에 진심으로 감사드립니다!<br>
             후원금은 프로젝트의 운영, 개발 및 유지보수에 소중히 사용됩니다.<br>
-            또한, 비트코인 시계열 예측 연구 등 더욱 발전된 기술 개발을 위해 활용될 예정입니다.<br>
+            또한 시계열 예측 연구 등 더욱 발전된 기술 개발을 위해 활용될 예정입니다.<br>
             작은 정성 하나하나가 큰 힘이 됩니다. 🙏
         </p>
 
@@ -251,30 +251,6 @@
             </div>
         </div>
 
-        <!-- 솔라나 -->
-        <div class="crypto-section">
-            <div class="crypto-header">
-                <img src="{% static 'sol.png' %}" alt="SOL">
-                <h3>솔라나 (SOL)</h3>
-            </div>
-            <div class="crypto-address">
-                <span id="sol-address">J73Esg3ntk5z5MuNRCRXAHmY3Z5nnAx5he22vAkpzXv2</span>
-                <button class="copy-btn" onclick="copyToClipboard('sol-address')">📋 복사</button>
-            </div>
-        </div>
-
-        <!-- 체인링크 -->
-        <div class="crypto-section">
-            <div class="crypto-header">
-                <img src="{% static 'link.png' %}" alt="SOL">
-                <h3>체인링크 (LINK)</h3>
-            </div>
-            <div class="crypto-address">
-                <span id="link-address">0x6E8960fb316C7202CbFe4277bBc30e9f95443bdf</span>
-                <button class="copy-btn" onclick="copyToClipboard('sol-address')">📋 복사</button>
-            </div>
-        </div>
-
         <!-- USDT TRC-20 -->
         <div class="crypto-section">
             <div class="crypto-header">
@@ -298,32 +274,7 @@
                 <button class="copy-btn" onclick="copyToClipboard('usdt-erc-address')">📋 복사</button>
             </div>
         </div>
-
-        <!-- USDC TRC-20 -->
-        <div class="crypto-section">
-            <div class="crypto-header">
-                <img src="{% static 'usdc.png' %}" alt="USDT">
-                <h3>유에스디코인 (USDC TRC-20)</h3>
-            </div>
-            <div class="crypto-address">
-                <span id="usdc-trc-address">TXWWs25cpduAYocsnMRedpZPC2z7r78X5b</span>
-                <button class="copy-btn" onclick="copyToClipboard('usdt-erc-address')">📋 복사</button>
-            </div>
-        </div>
-
-        <!-- USDC ERC-20 -->
-        <div class="crypto-section">
-            <div class="crypto-header">
-                <img src="{% static 'usdc.png' %}" alt="USDT">
-                <h3>유에스디코인 (USDC ERC-20)</h3>
-            </div>
-            <div class="crypto-address">
-                <span id="usdc-erc-address">0x6E8960fb316C7202CbFe4277bBc30e9f95443bdf</span>
-                <button class="copy-btn" onclick="copyToClipboard('usdt-erc-address')">📋 복사</button>
-            </div>
-        </div>
-
-        <button class="btn-donate">🙏 후원 감사합니다!</button>
+        <button class="btn-donate">감사합니다!</button>
     </div>
 </div>
 

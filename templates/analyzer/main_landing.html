@@ -4,6 +4,7 @@
 {% block content %}
 <style>
 /* Directional Prediction Styling */
+
 .direction-container {
     margin-top: 20px;
     text-align: left;
@@ -339,10 +340,37 @@
     cursor: pointer;
 }
 
+  .crypto-submenu {
+    display: none;
+    margin-left: 10px;
+  }
+
+  .crypto-submenu.show {
+    display: block;
+  }
+
+  .crypto-toggle {
+    color: #bfa25a;
+    font-size: 16px;
+    margin-top: 10px;
+    display: block;
+    cursor: pointer;
+    border: none;
+    background: none;
+    padding: 10px 0;
+    font-weight: bold;
+    text-align: left;
+  }
+
+
+
 /* 🔹 When Sidebar is Open */
 .show-sidebar {
     right: 0;
 }
+
+
+
 
 /* 🔹 Ensure Main Content Moves Slightly When Sidebar Opens */
 body.sidebar-open .container {
@@ -428,6 +456,13 @@ body.sidebar-open .container {
     visibility: visible;
     opacity: 1;
 }
+
+h1 {
+    font-family: 'Cinzel', serif;
+    color: #bfa25a; /* Dark gold */
+    letter-spacing: 1px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
 </style>
 
 <div class="container">
@@ -441,18 +476,25 @@ body.sidebar-open .container {
     <!-- ✅ Sidebar Navigation -->
     <div id="sidebar" class="sidebar">
         <span class="close-btn" onclick="toggleSidebar()">✖</span>
-        <a href="#">🏠 Home</a>
-        <a href="{% url 'support' %}">❤️ 후원</a>
+        <a href="{% url 'home-page' %}">Home</a>
+        <a href="{% url 'support' %}">후원</a>
+        <hr style="border-color: rgba(255, 255, 255, 0.2); margin: 15px 0;">
+        <button class="crypto-toggle" onclick="toggleCryptoMenu()">Crypto ▼</button>
+        <div id="crypto-submenu" class="crypto-submenu">
+          <a href="/BTC/">BTC</a>
+          <a href="#">ETH</a>
+          <a href="#">SOL</a>
+          <a href="#">XRP</a>
+          <a href="#">ADA</a>
+          <a href="#">XLM</a>
+          <a href="#">SUI</a>
+          <a href="#">LINK</a>
+        </div>
     </div>
 
-
-    <h1>BTC 시황</h1>
+    <h1><a href="{% url 'home-page' %}" style="color:  #bfa25a; text-decoration: none;">Simple Quant Labs</a></h1>
+    <h3>BTC 시황</h3>
     <div class="like-container">
-        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-        <!-- 좋아요 버튼 -->
-        <button id="like-button">❤️ <span id="like-count"></span></button>
-        <!-- 누적 방문자 -->
-        <span id="visitor-count-container">조회수: <span id="visitor-count">{{ visitor_count }}</span></span>
         <!-- X (Twitter) Icon -->
         <a href="https://x.com/Bitcoin" target="_blank">
             <img src="{% static 'x.png' %}" alt="X (Twitter)" class="social-icon">
@@ -530,6 +572,12 @@ function toggleSidebar() {
     const sidebar = document.getElementById("sidebar");
     sidebar.classList.toggle("show-sidebar");
 }
+
+function toggleCryptoMenu() {
+    const submenu = document.getElementById("crypto-submenu");
+    submenu.classList.toggle("show");
+}
+
 document.addEventListener("DOMContentLoaded", function() {
     const sidebar = document.getElementById("sidebar");
     const hamburger = document.querySelector(".hamburger-menu");
@@ -660,79 +708,6 @@ document.addEventListener("DOMContentLoaded", function() {
             });
     }
 
-
-    // fetch visitors
-    function fetchVisitors() {
-        fetch("/get-visitors/")
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById("visitor-count").textContent = data.visitors;
-            })
-            .catch(error => console.error("❌ Error fetching visitor count:", error));
-    }
-
-    // ✅ Fetch likes count
-    function fetchLikes() {
-        fetch("/get-likes/")
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById("like-count").textContent = data.likes;
-            })
-            .catch(error => console.error("❌ Error fetching likes:", error));
-    }
-
-    // ✅ Handle Like Button Click
-    const likeButton = document.getElementById("like-button");
-    if (likeButton) {
-        likeButton.addEventListener("click", function() {
-            fetch("/add-like/", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRFToken": getCSRFToken()
-                },
-                body: JSON.stringify({})  // Empty body, needed for POST request
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error("CSRF Token missing or invalid.");
-                }
-                return response.json();
-            })
-            .then(data => {
-                document.getElementById("like-count").textContent = data.likes;
-                // ✅ Add pop animation
-                likeButton.classList.add("like-pop");
-
-                // ✅ Remove animation after 300ms to allow re-triggering
-                setTimeout(() => {
-                    likeButton.classList.remove("like-pop");
-                }, 300);
-             })
-            .catch(error => console.error("❌ Error updating likes:", error));
-        });
-    } else {
-        console.warn("⚠️ Like button not found.");
-    }
-
-    // ✅ CSRF Token Extraction for Secure Requests
-    function getCSRFToken() {
-        let token = document.cookie.split("; ")
-            .find(row => row.startsWith("csrftoken="))
-            ?.split("=")[1];
-
-        if (!token) {
-            const csrfInput = document.querySelector("input[name='csrfmiddlewaretoken']");
-            if (csrfInput) {
-                token = csrfInput.value;
-            }
-        }
-        return token;
-    }
-
-    // ✅ Load probabilities and likes when page loads
-    fetchVisitors();
-    fetchLikes();
 });
 </script>
 {% endblock %}

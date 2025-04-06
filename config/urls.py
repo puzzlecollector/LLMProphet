@@ -16,16 +16,18 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from analyzer import views
+from analyzer import views, home_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('analyzer/', include('analyzer.urls')),
     path('BTC/', views.index, name='home'),
-    path("get-likes/", views.get_likes, name="get-likes"),
-    path("add-like/", views.add_like, name="add-like"),
-    path("get-visitors/", views.get_visitors, name="get-visitors"),
+    path("get-likes/", home_views.get_likes, name="get-likes"),
+    path("add-like/", home_views.add_like, name="add-like"),
+    path("get-visitors/", home_views.get_visitors, name="get-visitors"),
     path("support/", views.support_page, name="support"),
     path("get-btc-analysis/", views.get_btc_analysis, name="get-btc-analysis"),
     path("get-btc-technical-analysis/", views.get_btc_technical_analysis, name="get-btc-technical-analysis"),
+    path("main-page/", home_views.home_page, name="home-page"),
+    path("main-page/data/", home_views.home_page_summary_data, name="home-page-data"),
 ]

@@ -231,32 +231,6 @@ def update_btc_analysis():
               timeout=3600)
     print(f"✅ Updated BTC Analysis at {now} UTC / {now_kst} KST")
 
-## for likes modeling
-def get_likes(request):
-    """Fetch the current like count."""
-    likes = cache.get("likes_count")
-    if likes is None:
-        like_obj, created = Like.objects.get_or_create(id=1)
-        likes = like_obj.count
-        cache.set("likes_count", likes, timeout=3600)  # Cache for 1 hour
-    return JsonResponse({"likes": likes})
-
-@csrf_protect
-def add_like(request):
-    """Increase the like count when button is pressed."""
-    if request.method == "POST":
-        like_obj, created = Like.objects.get_or_create(id=1)
-        like_obj.count += 1
-        like_obj.save()
-        cache.set("likes_count", like_obj.count, timeout=3600)  # Update cache
-        return JsonResponse({"likes": like_obj.count})
-    return JsonResponse({"error": "Invalid request"}, status=400)
-
-def get_visitors(request):
-    """Fetch the cumulative visitor count directly from the database (not cache)."""
-    visitor_obj, created = Visitor.objects.get_or_create(id=1)
-    return JsonResponse({"visitors": visitor_obj.count})
-
 @require_GET
 def get_btc_analysis(request):
     cached = cache.get("btc_analysis_decision")
@@ -445,13 +419,7 @@ def get_btc_technical_analysis(request):
 
 
 def index(request):
-    # ✅ Increment visitor count
-    visitor_obj, created = Visitor.objects.get_or_create(id=1)
-    visitor_obj.count += 1
-    visitor_obj.save()
-    return render(request, "analyzer/main_landing.html", {
-        "visitor_count": visitor_obj.count
-    })
+    return render(request, "analyzer/main_landing.html", {})
 
 def support_page(request):
     return render(request, "analyzer/support_page.html", {})
