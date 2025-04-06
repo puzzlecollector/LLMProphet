@@ -1,0 +1,517 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+  h1 {
+    color: #bfa25a;
+    letter-spacing: 1px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    text-align: left;
+  }
+
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 40px 20px;
+  }
+
+  .analysis-container {
+    background-color: #1a1a1a;
+    color: white;
+    padding: 25px;
+    border-radius: 12px;
+    margin-top: 30px;
+    box-shadow: 0px 4px 8px rgba(255, 255, 255, 0.05);
+  }
+
+  .loader {
+    margin-top: 50px;
+    font-size: 1.2rem;
+    text-align: center;
+    animation: pulse 1s infinite;
+    color: white;
+  }
+
+  @keyframes pulse {
+    0% { opacity: 0.3; }
+    50% { opacity: 1; }
+    100% { opacity: 0.3; }
+  }
+
+  .summary-box {
+    margin-top: 20px;
+    background-color: #1e1e1e;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 0 12px rgba(191, 162, 90, 0.2);
+    color: white;
+    font-size: 16px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+  }
+
+  .hamburger-menu {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+    z-index: 1100;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    height: 45px;
+    background-color: rgba(50, 50, 50, 0.8);
+    border-radius: 8px;
+    padding: 8px;
+    transition: background 0.3s ease-in-out;
+  }
+
+  .hamburger-menu div {
+    width: 35px;
+    height: 4px;
+    background-color: white;
+    margin: 5px 0;
+    transition: 0.4s;
+  }
+
+  .hamburger-menu:hover {
+    background-color: rgba(80, 80, 80, 0.9);
+  }
+
+  .sidebar {
+    width: 260px;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    right: -280px;
+    background-color: #121212;
+    color: white;
+    padding: 20px;
+    transition: right 0.4s ease-in-out;
+    box-shadow: -4px 0px 10px rgba(255, 255, 255, 0.2);
+    z-index: 1099;
+  }
+
+  .sidebar a {
+    display: block;
+    color: white;
+    padding: 15px;
+    text-decoration: none;
+    font-size: 18px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    transition: background 0.3s;
+  }
+
+  .sidebar a:hover {
+    background-color: #333;
+  }
+
+  .close-btn {
+    font-size: 25px;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    cursor: pointer;
+  }
+
+  .crypto-submenu {
+    display: none;
+    margin-left: 10px;
+  }
+
+  .crypto-submenu.show {
+    display: block;
+  }
+
+  .crypto-toggle {
+    color: #bfa25a;
+    font-size: 16px;
+    margin-top: 10px;
+    display: block;
+    cursor: pointer;
+    border: none;
+    background: none;
+    padding: 10px 0;
+    font-weight: bold;
+    text-align: left;
+  }
+
+  .close-btn {
+    font-size: 25px;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    cursor: pointer;
+  }
+
+
+  .show-sidebar {
+    right: 0;
+  }
+
+  .like-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+  }
+
+  #like-button {
+      background-color: #ff4d4d;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: background 0.3s;
+  }
+
+  #like-button:hover {
+      background-color: #ff3333;
+  }
+
+  #visitor-count-container {
+      display: inline-block;
+      background-color: #4CAF50;
+      color: white;
+      padding: 8px 15px;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 5px;
+      border: none;
+      cursor: default;
+      user-select: none;
+      pointer-events: none;
+      transition: background 0.3s;
+  }
+
+  @keyframes likePop {
+      0% { transform: scale(1); box-shadow: 0 0 5px rgba(255, 77, 77, 0.5); }
+      50% { transform: scale(1.2); box-shadow: 0 0 15px rgba(255, 77, 77, 0.8); }
+      100% { transform: scale(1); box-shadow: 0 0 5px rgba(255, 77, 77, 0.5); }
+  }
+
+  .like-pop {
+      animation: likePop 0.3s ease-in-out;
+  }
+  .sidebar strong {
+    margin-top: 20px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+  }
+</style>
+
+<div class="container">
+  <div class="hamburger-menu" onclick="toggleSidebar()">
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+  <div id="sidebar" class="sidebar">
+    <span class="close-btn" onclick="toggleSidebar()">✖</span>
+    <a href="{% url 'home-page' %}">Home</a>
+    <a href="{% url 'support' %}">후원</a>
+    <hr style="border-color: rgba(255, 255, 255, 0.2); margin: 15px 0;">
+    <hr style="border-color: rgba(255, 255, 255, 0.2); margin: 15px 0;">
+    <button class="crypto-toggle" onclick="toggleCryptoMenu()">Crypto ▼</button>
+    <div id="crypto-submenu" class="crypto-submenu">
+      <a href="/BTC/">BTC</a>
+      <a href="#">ETH</a>
+      <a href="#">SOL</a>
+      <a href="#">XRP</a>
+      <a href="#">ADA</a>
+      <a href="#">XLM</a>
+      <a href="#">SUI</a>
+      <a href="#">LINK</a>
+    </div>
+  </div>
+
+
+
+  <div class="like-container">
+      <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+      <button id="like-button">❤️ <span id="like-count"></span></button>
+      <span id="visitor-count-container">조회수: <span id="visitor-count">{{ visitor_count }}</span></span>
+  </div>
+
+  <h1><a href="{% url 'home-page' %}" style="color:  #bfa25a; text-decoration: none;">Simple Quant Labs</h1>
+  <h3 style="display: flex; align-items: center; justify-content: left; gap: 10px;">
+    <a href="https://coinness.com/" target="_blank" style="display: inline-flex; align-items: center;">
+      <img src="{% static 'coinness.png' %}" alt="Coinness" style="width: 24px; height: 24px; vertical-align: middle;">
+    </a>
+    암호화폐 시장 속보 요약
+  </h3>
+  <small>본 기능은 <a href="https://openai.com/index/hello-gpt-4o/">GPT-4o</a> 모델을 활용하여 최신 암호화폐 시장 속보를 간결하고 핵심적으로 요약해 제공합니다. 주요 이슈와 시장 흐름을 빠르게 파악할 수 있으며, 정보는 15분 주기로 새로 계산됩니다. 페이지를 새로고침하여 최신 분석 내용을 확인하실 수 있습니다.</small>
+
+
+  <div class="analysis-container">
+    <p style="margin-top: 10px; text-align: left; color: #aaa;" id="last-updated-text">
+      📅 최근 업데이트: 로딩 중...
+    </p>
+    <div class="loader" id="loader">🚀 분석 로딩중...</div>
+    <div id="summary" class="summary-box" style="display: none;"></div>
+  </div>
+
+
+  <div class="analysis-container" style="margin-top: 40px; text-align: center;">
+    <h3 style="color: #bfa25a;">SQ Lab's Crypto Portfolio</h3>
+    <small>📅 최근 업데이트: 2025.04.05</small><br>
+    <small>해당 자산의 파이차트 부분을 클릭하면 해당 자산의 최근 시황 페이지로 이동합니다.</small>
+    <canvas id="portfolioChart" style="width: 280px; height: 280; margin: 0 auto;"></canvas>
+  </div>
+
+  <!-- ✅ Add High Risk Chart block right here -->
+  <div class="analysis-container" style="margin-top: 40px; text-align: center;">
+    <h3 style="color: #ff4d4d;">SQ Lab's High Risk Crypto Picks</h3>
+    <small>📅 최근 업데이트: 2025.04.05</small><br>
+    <small>해당 포트폴리오는 변동성이 매우 높고, 원금 손실 가능성이 크므로 신중히 접근하시기 바랍니다.</small>
+    <canvas id="highRiskChart" style="width: 280; height: 280; margin: 0 auto; margin-top: 20px;"></canvas>
+  </div>
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <br>
+  <small style="
+  display: inline-block;
+  margin-top: 20px;
+  font-size: 13px;
+  color: #000;
+  font-style: italic;
+  letter-spacing: 0.8px;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 6px 12px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);">
+  ⚙️ Powered by <strong style="color: #44b78b;">Django</strong></small>
+
+
+  <div style="
+    display: flex;
+    justify-content: left;
+    align-items: left;
+    gap: 20px;
+    margin-top: 15px;
+  ">
+    <a href="https://x.com/aiphabtc11235" target="_blank" title="Twitter">
+      <img src="{% static 'x.png' %}" alt="Twitter" style="width: 32px; height: 32px; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">
+    </a>
+    <a href="https://warpcast.com/puzzle-collector" target="_blank" title="Warpcast">
+      <img src="{% static 'warpcast.png' %}" alt="Warpcast" style="width: 32px; height: 32px; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">
+    </a>
+    <a href="https://aiphabtc-v2.com/" target="_blank" title="Blog">
+      <img src="{% static 'aiphabtcv2.png' %}" alt="Blog" style="width: 32px; height: 32px; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">
+    </a>
+    <a href="https://t.me/aiphabtc_analyst_kr" target="_blank" title="Telegram">
+      <img src="{% static 'telegram_icon.png' %}" alt="Telegram" style="width: 32px; height: 32px; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">
+    </a>
+  </div>
+
+</div>
+
+<script>
+  function toggleSidebar() {
+      const sidebar = document.getElementById("sidebar");
+      sidebar.classList.toggle("show-sidebar");
+  }
+
+  function toggleCryptoMenu() {
+    const submenu = document.getElementById("crypto-submenu");
+    submenu.classList.toggle("show");
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    // ✅ Fetch and display likes
+    function fetchLikes() {
+      fetch("/get-likes/")
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById("like-count").textContent = data.likes;
+        });
+    }
+
+    // ✅ Fetch visitor count
+    function fetchVisitors() {
+      fetch("/get-visitors/")
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById("visitor-count").textContent = data.visitors;
+        });
+    }
+
+    // ✅ Handle like button click
+    const likeBtn = document.getElementById("like-button");
+    if (likeBtn) {
+      likeBtn.addEventListener("click", function () {
+        fetch("/add-like/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": getCSRFToken()
+          },
+          body: JSON.stringify({})
+        })
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById("like-count").textContent = data.likes;
+          likeBtn.classList.add("like-pop");
+          setTimeout(() => {
+            likeBtn.classList.remove("like-pop");
+          }, 300);
+        });
+      });
+    }
+
+    // ✅ CSRF Token extraction
+    function getCSRFToken() {
+      let token = document.cookie.split("; ")
+        .find(row => row.startsWith("csrftoken="))
+        ?.split("=")[1];
+      if (!token) {
+        const csrfInput = document.querySelector("input[name='csrfmiddlewaretoken']");
+        if (csrfInput) token = csrfInput.value;
+      }
+      return token;
+    }
+
+    // ✅ Trigger these on page load
+    fetchLikes();
+    fetchVisitors();
+
+    fetch("/main-page/data/")
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById("loader").style.display = "none";
+        const summaryDiv = document.getElementById("summary");
+        summaryDiv.style.display = "block";
+        summaryDiv.textContent = data.summary;
+
+        document.getElementById("last-updated-text").textContent = `📅 마지막 업데이트: ${data.last_updated}`;
+      })
+      .catch(err => {
+        document.getElementById("loader").textContent = "요약을 불러오는 데 실패했습니다.";
+        console.error("Fetch error:", err);
+      });
+
+    // ✅ Main Portfolio Chart
+    const ctx = document.getElementById('portfolioChart').getContext('2d');
+    const chart = new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels: ['BTC', 'ETH', 'SOL', 'XRP', 'ADA', 'XLM', 'SUI', 'LINK'],
+        datasets: [{
+          data: [70, 6, 6, 6, 3, 3, 3, 3],
+          backgroundColor: [
+            '#f2a900', '#627eea', '#00ffba', '#2a5ada',
+            '#0033ad', '#16c784', '#ffc107', '#e84142'
+          ],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            labels: {
+              color: 'white',
+              font: { weight: 'bold' }
+            }
+          },
+          tooltip: {
+            callbacks: {
+              label: function (context) {
+                return `${context.label}: ${context.raw}%`;
+              }
+            }
+          }
+        },
+        onClick: function (e, elements) {
+          if (elements.length > 0) {
+            const index = elements[0].index;
+            const label = this.data.labels[index];
+            const urlMap = {
+              'BTC': '/BTC/',
+              'ETH': '#',
+              'SOL': '#',
+              'LINK': '#',
+              'ADA': '#',
+              'ONDO': '#',
+              'SUI': '#',
+              'AVAX': '#'
+            };
+            const targetUrl = urlMap[label];
+            if (targetUrl && targetUrl !== '#') {
+              window.location.href = targetUrl;
+            }
+          }
+        }
+      }
+    });
+
+    // ✅ High Risk Portfolio Chart
+    const highRiskCtx = document.getElementById('highRiskChart').getContext('2d');
+    const highRiskChart = new Chart(highRiskCtx, {
+      type: 'pie',
+      data: {
+        labels: ['DEGEN', 'HMSTR', 'BOME', 'WHITE', 'DSYNC', 'ONDO', 'IMX', 'BEAMX', 'OM', 'ICP', 'PIN', 'PI', 'NEAR', 'TAO'],
+        datasets: [{
+          data: [7.14, 7.14, 7.14, 7.14, 7.14, 7.14, 7.14, 7.14, 7.14, 7.14, 7.14, 7.14, 7.14, 7.14],
+          backgroundColor: [
+            '#ff00ff', '#ffa500', '#00ffff', '#ffffff', '#00ff00',
+            '#16c784', '#ff6384', '#36a2eb', '#ff9f40', '#9966ff',
+            '#c9cbcf', '#999966', '#00cc99', '#cc3300'
+          ],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            labels: {
+              color: 'white',
+              font: { weight: 'bold' }
+            }
+          },
+          tooltip: {
+            callbacks: {
+              label: function (context) {
+                return `${context.label}: ${context.raw}%`;
+              }
+            }
+          }
+        },
+        onClick: function (e, elements) {
+          if (elements.length > 0) {
+            const index = elements[0].index;
+            const label = this.data.labels[index];
+            const urlMap = {
+              'DEGEN': '#',
+              'HMSTR': '#',
+              'BOME': '#',
+              'WHITE': '#',
+              'DSYNC': '#',
+              'ONDO': '#',
+              'IMX': '#',
+              'BEAMX': '#',
+              'OM': '#',
+              'ICP': '#',
+              'PIN': '#',
+              'PI': '#',
+              'NEAR': '#',
+              'TAO': '#'
+            };
+            const targetUrl = urlMap[label];
+            if (targetUrl && targetUrl !== '#') {
+              window.location.href = targetUrl;
+            }
+          }
+        }
+      }
+    });
+  });
+</script>
+{% endblock %}
