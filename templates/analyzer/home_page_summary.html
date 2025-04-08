@@ -216,18 +216,21 @@
     <a href="{% url 'home-page' %}">Home</a>
     <a href="{% url 'support' %}">후원</a>
     <hr style="border-color: rgba(255, 255, 255, 0.2); margin: 15px 0;">
-    <hr style="border-color: rgba(255, 255, 255, 0.2); margin: 15px 0;">
-    <button class="crypto-toggle" onclick="toggleCryptoMenu()">Crypto ▼</button>
+    <button class="crypto-toggle" onclick="toggleCryptoMenu()">Our Crypto Portfolio ▼</button>
     <div id="crypto-submenu" class="crypto-submenu">
       <a href="/BTC/">BTC</a>
-      <a href="#">ETH</a>
-      <a href="#">SOL</a>
-      <a href="#">XRP</a>
-      <a href="#">ADA</a>
-      <a href="#">XLM</a>
-      <a href="#">SUI</a>
-      <a href="#">LINK</a>
+      <a href="/ETH/">ETH</a>
+      <a href="/SOL/">SOL</a>
+      <a href="/XRP/">XRP</a>
+      <a href="/ADA/">ADA</a>
+      <a href="/XLM/">XLM</a>
+      <a href="/SUI/">SUI</a>
+      <a href="/LINK/">LINK</a>
+      <a href="/ONDO/">ONDO</a>
     </div>
+    <hr style="border-color: rgba(255, 255, 255, 0.2); margin: 15px 0;">
+    <button class="crypto-toggle" onclick="location.href='/high-risk/'">High Risk Crypto Portfolio</button>
+    <hr style="border-color: rgba(255, 255, 255, 0.2); margin: 15px 0;">
   </div>
 
 
@@ -259,8 +262,8 @@
 
   <div class="analysis-container" style="margin-top: 40px; text-align: center;">
     <h3 style="color: #bfa25a;">SQ Lab's Crypto Portfolio</h3>
-    <small>📅 최근 업데이트: 2025.04.05</small><br>
-    <small>해당 자산의 파이차트 부분을 클릭하면 해당 자산의 최근 시황 페이지로 이동합니다.</small>
+    <small>📅 최근 업데이트: 2025.04.08</small><br>
+    <small>저희가 투자 중인 코인들의 최신 시황은 오른쪽 상단의 메뉴(☰)를 클릭하시면 확인하실 수 있습니다.</small>
     <canvas id="portfolioChart" style="width: 280px; height: 280; margin: 0 auto;"></canvas>
   </div>
 
@@ -301,6 +304,9 @@
     </a>
     <a href="https://warpcast.com/puzzle-collector" target="_blank" title="Warpcast">
       <img src="{% static 'warpcast.png' %}" alt="Warpcast" style="width: 32px; height: 32px; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">
+    </a>
+    <a href="https://truthsocial.com/@puzzlecollector" target="_blank" title="Truth">
+      <img src="{% static 'truth_social.png' %}" alt="Truth" style="width: 32px; height: 32px; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">
     </a>
     <a href="https://aiphabtc-v2.com/" target="_blank" title="Blog">
       <img src="{% static 'aiphabtcv2.png' %}" alt="Blog" style="width: 32px; height: 32px; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">
@@ -401,12 +407,12 @@
     const chart = new Chart(ctx, {
       type: 'pie',
       data: {
-        labels: ['BTC', 'ETH', 'SOL', 'XRP', 'ADA', 'XLM', 'SUI', 'LINK'],
+        labels: ['BTC', 'XRP', 'ETH', 'LINK', 'XLM', 'ADA', 'SUI', 'SOL', 'ONDO'],
         datasets: [{
-          data: [70, 6, 6, 6, 3, 3, 3, 3],
+          data: [50, 20, 6, 6, 6, 3, 3, 3, 3],
           backgroundColor: [
             '#f2a900', '#627eea', '#00ffba', '#2a5ada',
-            '#0033ad', '#16c784', '#ffc107', '#e84142'
+            '#0033ad', '#16c784', '#ffc107', '#e84142', '#ff66cc'
           ],
           borderWidth: 1
         }]
@@ -433,14 +439,14 @@
             const index = elements[0].index;
             const label = this.data.labels[index];
             const urlMap = {
-              'BTC': '/BTC/',
+              'BTC': '#',
               'ETH': '#',
               'SOL': '#',
+              'XRP': '#',
               'LINK': '#',
               'ADA': '#',
-              'ONDO': '#',
+              'XLM': '#',
               'SUI': '#',
-              'AVAX': '#'
             };
             const targetUrl = urlMap[label];
             if (targetUrl && targetUrl !== '#') {
@@ -456,13 +462,13 @@
     const highRiskChart = new Chart(highRiskCtx, {
       type: 'pie',
       data: {
-        labels: ['DEGEN', 'HMSTR', 'BOME', 'WHITE', 'DSYNC', 'ONDO', 'IMX', 'BEAMX', 'OM', 'ICP', 'PIN', 'PI', 'NEAR', 'TAO'],
+        labels: ['DEGEN', 'HMSTR', 'BOME', 'WHITE', 'DSYNC', 'IMX', 'BEAMX', 'OM', 'ICP', 'PIN', 'PI', 'NEAR', 'TAO'],
         datasets: [{
-          data: [7.14, 7.14, 7.14, 7.14, 7.14, 7.14, 7.14, 7.14, 7.14, 7.14, 7.14, 7.14, 7.14, 7.14],
+          data: [7.69, 7.69, 7.69, 7.69, 7.69, 7.69, 7.69, 7.69, 7.69, 7.69, 7.69, 7.69, 7.69],
           backgroundColor: [
             '#ff00ff', '#ffa500', '#00ffff', '#ffffff', '#00ff00',
             '#16c784', '#ff6384', '#36a2eb', '#ff9f40', '#9966ff',
-            '#c9cbcf', '#999966', '#00cc99', '#cc3300'
+            '#c9cbcf', '#999966', '#00cc99'
           ],
           borderWidth: 1
         }]

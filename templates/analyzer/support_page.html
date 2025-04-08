@@ -163,6 +163,30 @@
         background-color: #333;
     }
 
+      .crypto-submenu {
+        display: none;
+        margin-left: 10px;
+      }
+
+      .crypto-submenu.show {
+        display: block;
+      }
+
+      .crypto-toggle {
+        color: #bfa25a;
+        font-size: 16px;
+        margin-top: 10px;
+        display: block;
+        cursor: pointer;
+        border: none;
+        background: none;
+        padding: 10px 0;
+        font-weight: bold;
+        text-align: left;
+      }
+
+
+
     /* 🔹 Close Button */
     .close-btn {
         font-size: 25px;
@@ -214,8 +238,24 @@
     <!-- ✅ Sidebar Navigation -->
     <div id="sidebar" class="sidebar">
         <span class="close-btn" onclick="toggleSidebar()">✖</span>
-        <a href="{% url 'home-page' %}">🏠 Home</a>
-        <a href="{% url 'support' %}">❤️ 후원</a>
+        <a href="{% url 'home-page' %}">Home</a>
+        <a href="{% url 'support' %}">후원</a>
+        <hr style="border-color: rgba(255, 255, 255, 0.2); margin: 15px 0;">
+        <button class="crypto-toggle" onclick="toggleCryptoMenu()">Our Crypto Portfolio ▼</button>
+        <div id="crypto-submenu" class="crypto-submenu">
+          <a href="/BTC/">BTC</a>
+          <a href="/ETH/">ETH</a>
+          <a href="/SOL/">SOL</a>
+          <a href="/XRP/">XRP</a>
+          <a href="/ADA/">ADA</a>
+          <a href="/XLM/">XLM</a>
+          <a href="/SUI/">SUI</a>
+          <a href="/LINK/">LINK</a>
+          <a href="/ONDO/">ONDO</a>
+        </div>
+        <hr style="border-color: rgba(255, 255, 255, 0.2); margin: 15px 0;">
+        <button class="crypto-toggle" onclick="location.href='/high-risk/'">High Risk Crypto Portfolio</button>
+        <hr style="border-color: rgba(255, 255, 255, 0.2); margin: 15px 0;">
     </div>
 
     <div class="donation-container">
@@ -285,6 +325,10 @@
         sidebar.classList.toggle("show-sidebar");
     }
 
+    function toggleCryptoMenu() {
+        const submenu = document.getElementById("crypto-submenu");
+        submenu.classList.toggle("show");
+    }
 
 
     function copyToClipboard(id) {

@@ -481,13 +481,13 @@ h1 {
         <hr style="border-color: rgba(255, 255, 255, 0.2); margin: 15px 0;">
         <button class="crypto-toggle" onclick="toggleCryptoMenu()">Our Crypto Portfolio ▼</button>
         <div id="crypto-submenu" class="crypto-submenu">
-          <a href="#">BTC</a>
+          <a href="/BTC/">BTC</a>
           <a href="/ETH/">ETH</a>
           <a href="/SOL/">SOL</a>
           <a href="/XRP/">XRP</a>
           <a href="/ADA/">ADA</a>
           <a href="/XLM/">XLM</a>
-          <a href="/SUI/">SUI</a>
+          <a href="#">SUI</a>
           <a href="/LINK/">LINK</a>
           <a href="/ONDO/">ONDO</a>
         </div>
@@ -498,21 +498,21 @@ h1 {
 
     <h1><a href="{% url 'home-page' %}" style="color:  #bfa25a; text-decoration: none;">Simple Quant Labs</a></h1>
     <h3 style="display: flex; align-items: center; gap: 10px;">
-      <img src="{% static 'btc_logo.png' %}" alt="Bitcoin" style="width: 28px; height: 28px;">
-      BTC 시황
+      <img src="{% static 'sui2.png' %}" alt="Solana" style="width: 28px; height: 28px;">
+      SUI 시황
     </h3>
     <div class="like-container">
         <!-- X (Twitter) Icon -->
-        <a href="https://x.com/Bitcoin" target="_blank">
+        <a href="https://x.com/SuiNetwork" target="_blank">
             <img src="{% static 'x.png' %}" alt="X (Twitter)" class="social-icon">
         </a>
-        <a href="https://www.okx.com/trade-spot/btc-usdt" target="_blank">
+        <a href="https://www.okx.com/trade-spot/sui-usdt" target="_blank">
             <img src="{% static 'okx.png' %}" alt="okx" class="social-icon">
         </a>
-        <a href="https://www.mexc.com/ko-KR/exchange/BTC_USDT?_from=search" target="_blank">
+        <a href="https://www.mexc.com/ko-KR/exchange/SUI_USDT?_from=search" target="_blank">
             <img src="{% static 'mexc.png' %}" alt="mexc" class="social-icon">
         </a>
-        <a href="https://www.bithumb.com/react/trade/order/BTC-KRW" target="_blank">
+        <a href="https://www.bithumb.com/react/trade/order/SUI-KRW" target="_blank">
             <img src="{% static 'bithumb.png' %}" alt="bithumb" class="social-icon">
         </a>
     </div>
@@ -526,7 +526,7 @@ h1 {
           {
           "width": "900",
           "height": "600",
-          "symbol": "OKX:BTCUSDT",
+          "symbol": "OKX:SUIUSDT",
           "timezone": "Etc/UTC",
           "theme": "dark",
           "style": "1",
@@ -551,7 +551,7 @@ h1 {
     <div class="analysis-container">
         <div class="update-info">
             <small id="last-updated"><strong>📅 최근 업데이트:</strong> {{ last_updated }}</small><br>
-            <small>봇은 GPT-4o 기반이며 가장 최근 <a href="https://coinness.com/search?q=BTC&category=news" target="_blank" style="color: white; text-decoration: underline;">코인니스</a> 속보에서 중요 정보를 골라내어 시황 분석을 진행하고 있습니다.</small>
+            <small>봇은 GPT-4o 기반이며 가장 최근 <a href="https://coinness.com/search?q=SOL&category=news" target="_blank" style="color: white; text-decoration: underline;">코인니스</a> 속보에서 중요 정보를 골라내어 시황 분석을 진행하고 있습니다.</small>
             <small>본 분석은 참고용으로만 활용해야 하며, 최종 투자 결정은 본인의 주체로 진행하셔야 합니다.</small>
         </div>
 
@@ -563,7 +563,7 @@ h1 {
 
         <div class="direction-container">
             <p>
-                <strong> 봇이 판단한 현재 BTC에 대한 투자 심리:</strong>
+                <strong> 봇이 판단한 현재 SUI에 대한 투자 심리:</strong>
                 <span id="decision-text" class="">로딩중...</span>
             </p>
         </div>
@@ -571,7 +571,7 @@ h1 {
 
     <div class="analysis-container" style="margin-top: 30px;">
         <small><strong>📅 최근 업데이트:</strong></small> <small id="tech-last-updated">로딩중...</small><br>
-        <small>OKX 거래소의 1시간봉 BTC/USDT 데이터를 기반으로 기술적 분석을 수행하여, 비트코인의 최근 가격 흐름을 분석한 지표입니다. 주요 지표들을 활용하여 현재 시장이 상승 추세인지, 하락 추세인지 판단하는 데 유용한 정보를 제공합니다.</small>
+        <small>OKX 거래소의 1시간봉 SUI/USDT 데이터를 기반으로 기술적 분석을 수행하여, 비트코인의 최근 가격 흐름을 분석한 지표입니다. 주요 지표들을 활용하여 현재 시장이 상승 추세인지, 하락 추세인지 판단하는 데 유용한 정보를 제공합니다.</small>
         <h2>Hourly Technicals</h2>
         <h3>지표 종합 의견: <span id="tech-summary">로딩중...</span></h3>
         <ul id="indicator-list"></ul>
@@ -609,7 +609,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const interval_technical = setInterval(fetchTechnicalAnalysis, 5000); // 5초마다 확인
 
     function fetchAnalysisData() {
-        fetch("/get-btc-analysis/")
+        fetch("/get-sui-analysis/")
             .then(response => response.json())
             .then(data => {
                 // ✅ 로딩 중이면 문구를 보여주고 리턴
@@ -637,7 +637,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function fetchTechnicalAnalysis() {
-        fetch("/get-btc-technical-analysis/")
+        fetch("/get-sui-technical-analysis/")
             .then(response => response.json())
             .then(data => {
                 document.getElementById("tech-last-updated").textContent = data.last_updated;
