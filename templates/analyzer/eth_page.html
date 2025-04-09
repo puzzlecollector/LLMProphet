@@ -614,17 +614,27 @@ document.addEventListener("DOMContentLoaded", function() {
     const interval = setInterval(fetchAnalysisData, 5000);  // 5초마다 확인
     const interval_technical = setInterval(fetchTechnicalAnalysis, 5000); // 5초마다 확인
 
+    let lastLoadedContent = null;
+
     function fetchAnalysisData() {
         fetch("/get-eth-analysis/")
             .then(response => response.json())
             .then(data => {
                 // ✅ 로딩 중이면 문구를 보여주고 리턴
                 if (data.loading) {
-                    document.getElementById("summary").textContent = "분석 로딩중...";
-                    document.getElementById("sentiment").textContent = "로딩중...";
-                    document.getElementById("decision-text").textContent = "로딩중...";
+                    if (!lastLoadedContent) {
+                        document.getElementById("summary").textContent = "분석 로딩중...";
+                        document.getElementById("sentiment").textContent = "로딩중...";
+                        document.getElementById("decision-text").textContent = "로딩중...";
+                    }
                     return;
                 }
+
+                const currentContent = data.summary + data.sentiment + data.decision;
+                if (lastLoadedContent === currentContent) {
+                    return; // ❌ Prevent re-rendering identical content
+                }
+                lastLoadedContent = currentContent;
 
                 // ✅ 분석 내용 DOM에 삽입
                 document.getElementById("summary").textContent = data.summary;
