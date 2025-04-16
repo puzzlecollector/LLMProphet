@@ -8,15 +8,15 @@
     <!-- ✅ Open Graph -->
     <meta property="og:title" content="SimpleQuant" />
     <meta property="og:description" content="Intelligent Market Analysis with LLM & Machine Learning" />
-    <meta property="og:image" content="{% static 'unicorn_v2.png' %}?v=7" />
-    <meta property="og:url" content="http://simplequant.net" />
+    <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'unicorn_v2.png' %}?v=8" />
+    <meta property="og:url" content="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}" />
     <meta property="og:type" content="website" />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="SimpleQuant" />
     <meta name="twitter:description" content="Intelligent Market Analysis with LLM & Machine Learning" />
-    <meta name="twitter:image" content="{% static 'unicorn_v2.png' %}?v=7" />
+    <meta name="twitter:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'unicorn_v2.png' %}?v=8" />
 </head>
 <body>
 {% block content %}
