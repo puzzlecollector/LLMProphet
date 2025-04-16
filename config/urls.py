@@ -20,7 +20,7 @@ from django.views.generic import RedirectView
 from analyzer import views, home_views, eth_views, sol_views, xrp_views, ada_views, xlm_views, sui_views, link_views, ondo_views, high_risk_crypto_views, timeseries_views
 
 urlpatterns = [
-    path('', RedirectView.as_view(url='/main-page/', permanent=True)),
+    path('', home_views.home_page, name="home"),
     path('admin/', admin.site.urls),
     path('analyzer/', include('analyzer.urls')),
     path('high-risk/', high_risk_crypto_views.high_risk_crypto_view, name='high-risk-page'),
