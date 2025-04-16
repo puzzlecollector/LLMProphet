@@ -4,7 +4,20 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>SimpleQuant – Intelligent Market Analysis with LLM & Machine Learning<</title>
+    <title>SimpleQuant – Intelligent Market Analysis with LLM & Machine Learning</title>
+
+    <!-- ✅ Open Graph Tags for Link Preview -->
+    <meta property="og:title" content="SimpleQuant" />
+    <meta property="og:description" content="Intelligent Market Analysis with LLM & Machine Learning" />
+    <meta property="og:image" content="{{ request.build_absolute_uri|slice:":-1" }}{% static 'unicorn_v2.png' %}" />
+    <meta property="og:url" content="{{ request.build_absolute_uri }}" />
+    <meta property="og:type" content="website" />
+
+    <!-- Twitter Cards (optional but good practice) -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="SimpleQuant" />
+    <meta name="twitter:description" content="Intelligent Market Analysis with LLM & Machine Learning" />
+    <meta name="twitter:image" content="{{ request.build_absolute_uri|slice:":-1" }}{% static 'unicorn_v2.png' %}" />
 </head>
 <body>
 {% block content %}

@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import RedirectView
-from analyzer import views, home_views, eth_views, sol_views, xrp_views, ada_views, xlm_views, sui_views, link_views, ondo_views, high_risk_crypto_views
+from analyzer import views, home_views, eth_views, sol_views, xrp_views, ada_views, xlm_views, sui_views, link_views, ondo_views, high_risk_crypto_views, timeseries_views
 
 urlpatterns = [
     path('', RedirectView.as_view(url='/main-page/', permanent=True)),
@@ -57,4 +57,6 @@ urlpatterns = [
     path("get-link-technical-analysis/", link_views.get_link_technical_analysis, name="get-link-technical-analysis"),
     path("get-ondo-analysis/", ondo_views.get_ondo_analysis, name="get-ondo-analysis"),
     path("get-ondo-technical-analysis/", ondo_views.get_ondo_technical_analysis, name="get-ondo-technical-analysis"),
+
+    path("time-series/naive-model/", timeseries_views.naive_model, name="naive-model"),
 ]

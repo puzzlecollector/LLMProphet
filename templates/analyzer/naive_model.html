@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block content %}
+<!-- MathJax 적용 -->
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']]
+    },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+<div class="container">
+  <!-- 🔶 Simple Quant Labs 상단 타이틀 -->
+  <h1 style="margin-top: 20px; text-align: left;">
+    <a href="{% url 'home-page' %}" style="color: #bfa25a; text-decoration: none;">Simple Quant Labs</a>
+  </h1>
+
+  <div class="analysis-container" style="margin-top: 20px;">
+    <h3 style="color: #bfa25a;">🧮 Naive Time Series Model</h3>
+    <p style="color: #ccc;">Naive 모델은 시계열 예측에서 가장 단순한 기법으로, 이전 시점의 값을 그대로 다음 값으로 사용하는 방식입니다.</p>
+
+    <div style="background-color: #1e1e1e; color: white; padding: 20px; border-radius: 8px; margin-top: 20px;">
+      <h4 style="color: #ffcc00;">📐 수식</h4>
+      <p>
+        $$ y_{t+1} = y_t + \varepsilon_t $$
+      </p>
+      <p style="color: #999;">여기서 \( y_t \)는 시점 \( t \)의 관측값이고, \( \varepsilon_t \)는 평균이 0인 노이즈입니다.</p>
+    </div>
+
+    <p style="color: #aaa; margin-top: 20px;">
+      Naive 모델은 계절성, 추세 없이 데이터를 단순히 반복하는 형태일 때 baseline 모델로 많이 활용됩니다.
+    </p>
+  </div>
+</div>
+{% endblock %}
