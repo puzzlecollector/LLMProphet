@@ -206,40 +206,6 @@
 </style>
 
 <div class="container">
-  <div class="hamburger-menu" onclick="toggleSidebar()">
-    <div></div>
-    <div></div>
-    <div></div>
-  </div>
-  <div id="sidebar" class="sidebar">
-    <span class="close-btn" onclick="toggleSidebar()">✖</span>
-    <a href="{% url 'home-page' %}">Home</a>
-    <a href="{% url 'support' %}">후원</a>
-    <hr style="border-color: rgba(255, 255, 255, 0.2); margin: 15px 0;">
-    <button class="crypto-toggle" onclick="toggleCryptoMenu()">Our Crypto Portfolio ▼</button>
-    <div id="crypto-submenu" class="crypto-submenu">
-      <a href="/BTC/">BTC</a>
-      <a href="/ETH/">ETH</a>
-      <a href="/SOL/">SOL</a>
-      <a href="/XRP/">XRP</a>
-      <a href="/ADA/">ADA</a>
-      <a href="/XLM/">XLM</a>
-      <a href="/SUI/">SUI</a>
-      <a href="/LINK/">LINK</a>
-      <a href="/ONDO/">ONDO</a>
-    </div>
-    <hr style="border-color: rgba(255, 255, 255, 0.2); margin: 15px 0;">
-    <button class="crypto-toggle" onclick="location.href='/high-risk/'">High Risk Crypto Portfolio</button>
-    <hr style="border-color: rgba(255, 255, 255, 0.2); margin: 15px 0;">
-
-    <button class="crypto-toggle" onclick="toggleTimeSeriesMenu()">Time Series Analysis ▼</button>
-    <div id="time-series-submenu" class="crypto-submenu">
-      <a href="{% url 'naive-model' %}">Naive 모형</a>
-    </div>
-
-  </div>
-
-
   <div class="like-container">
       <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
       <button id="like-button">❤️ <span id="like-count"></span></button>
@@ -337,21 +303,6 @@
 </div>
 
 <script>
-  function toggleSidebar() {
-      const sidebar = document.getElementById("sidebar");
-      sidebar.classList.toggle("show-sidebar");
-  }
-
-  function toggleCryptoMenu() {
-    const submenu = document.getElementById("crypto-submenu");
-    submenu.classList.toggle("show");
-  }
-
-  function toggleTimeSeriesMenu() {
-    const submenu = document.getElementById("time-series-submenu");
-    submenu.classList.toggle("show");
-  }
-
   document.addEventListener("DOMContentLoaded", function () {
     // ✅ Fetch and display likes
     function fetchLikes() {

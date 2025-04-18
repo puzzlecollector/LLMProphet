@@ -1,5 +1,116 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
+
+<!-- ✅ 햄버거 메뉴 + 사이드바 스타일 복사 -->
+<style>
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 40px 20px;
+  }
+
+  .hamburger-menu {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+    z-index: 1100;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    height: 45px;
+    background-color: rgba(50, 50, 50, 0.8);
+    border-radius: 8px;
+    padding: 8px;
+    transition: background 0.3s ease-in-out;
+  }
+
+  .hamburger-menu div {
+    width: 35px;
+    height: 4px;
+    background-color: white;
+    margin: 5px 0;
+    transition: 0.4s;
+  }
+
+  .hamburger-menu:hover {
+    background-color: rgba(80, 80, 80, 0.9);
+  }
+
+  .sidebar {
+    width: 260px;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    right: -280px;
+    background-color: #121212;
+    color: white;
+    padding: 20px;
+    transition: right 0.4s ease-in-out;
+    box-shadow: -4px 0px 10px rgba(255, 255, 255, 0.2);
+    z-index: 1099;
+  }
+
+  .sidebar a {
+    display: block;
+    color: white;
+    padding: 15px;
+    text-decoration: none;
+    font-size: 18px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    transition: background 0.3s;
+  }
+
+  .sidebar a:hover {
+    background-color: #333;
+  }
+
+  .close-btn {
+    font-size: 25px;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    cursor: pointer;
+  }
+
+  .crypto-submenu {
+    display: none;
+    margin-left: 10px;
+  }
+
+  .crypto-submenu.show {
+    display: block;
+  }
+
+  .crypto-toggle {
+    color: #bfa25a;
+    font-size: 16px;
+    margin-top: 10px;
+    display: block;
+    cursor: pointer;
+    border: none;
+    background: none;
+    padding: 10px 0;
+    font-weight: bold;
+    text-align: left;
+  }
+
+  .show-sidebar {
+    right: 0;
+  }
+
+  .sidebar strong {
+    margin-top: 20px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+  }
+</style>
+
+
+<!-- ✅ 원래 Target 콘텐츠 유지 -->
 <!-- MathJax 적용 -->
 <script>
   window.MathJax = {
@@ -18,21 +129,146 @@
     <a href="{% url 'home-page' %}" style="color: #bfa25a; text-decoration: none;">Simple Quant Labs</a>
   </h1>
 
-  <div class="analysis-container" style="margin-top: 20px;">
-    <h3 style="color: #bfa25a;">🧮 Naive Time Series Model</h3>
-    <p style="color: #ccc;">Naive 모델은 시계열 예측에서 가장 단순한 기법으로, 이전 시점의 값을 그대로 다음 값으로 사용하는 방식입니다.</p>
+  <div class="analysis-container" style="margin-top: 40px;">
+    <h3 style="color: #bfa25a;">Random Walk</h3>
+    <p style="color: black;">
+      Naive forecast는 \( y_t \)는 비정상 (non-stationary) 시계열이지만, \( y_t - y_{t-1} \) 이 정상 시계열일 때 사용하는 모형입니다.
+      이 차분(differencing)은 시계열이 1차 추세(trend)를 가질 때 비정상성을 제거하는 데 유용합니다.
+    </p>
 
-    <div style="background-color: #1e1e1e; color: white; padding: 20px; border-radius: 8px; margin-top: 20px;">
-      <h4 style="color: #ffcc00;">📐 수식</h4>
-      <p>
-        $$ y_{t+1} = y_t + \varepsilon_t $$
-      </p>
-      <p style="color: #999;">여기서 \( y_t \)는 시점 \( t \)의 관측값이고, \( \varepsilon_t \)는 평균이 0인 노이즈입니다.</p>
+    <p style="color: black;">즉,</p>
+    <p style="text-align: center; color: black">
+      $$ y_t = y_{t-1} + \varepsilon_t $$
+    </p>
+
+    <p style="color: black;">
+      위 모형에서 \( y_t - y_{t-1} \)는 평균이 0인 white noise를 따른다고 가정하며, 이러한 과정을 <strong>random walk</strong>라고 합니다.
+      따라서 조건부 기댓값은 다음과 같습니다:
+    </p>
+
+    <p style="text-align: center; color: black">
+      $$ E(y_t \mid y_{t-1}) = y_{t-1} $$
+    </p>
+
+    <p style="color: black;">
+      이는 \( y_t \)의 가장 좋은 예측치는 바로 이전 시점 값 \( y_{t-1} \)이라는 뜻입니다.
+      미래 h 시점 예측은 다음과 같으며, 이를 <strong>naive forecast</strong>라고 부릅니다:
+    </p>
+
+    <p style="text-align: center; color: black">
+      $$ \hat y_{T+h \mid T} = y_T \quad \text{for } h = 1, 2, ..., l $$
+    </p>
+
+    <hr style="border-color: rgba(255,255,255,0.1); margin: 30px 0;">
+
+    <h4 style="color: #bfa25a;">계절성 시계열의 naive 예측 (Seasonal Naive Forecast)</h4>
+    <p style="color: black;">
+      시계열 데이터가 seasonality를 가지는 경우, 예측값은 과거 동일 주기의 값을 참고하여 계산할 수 있습니다.
+      예를 들어 주간 seasonality를 가진 일일 데이터라면, 오늘의 값은 7일 전의 값에 영향을 받습니다.
+    </p>
+
+    <p style="color: black;">
+      seasonality의 주기 \( m \)에 대해 다음처럼 정의할 수 있습니다:
+    </p>
+
+    <ul style="color: black;">
+      <li>Weekly seasonality → \( m = 7 \)</li>
+      <li>Monthly seasonality → \( m = 30.4 \)</li>
+      <li>Yearly seasonality → \( m = 365.25 \)</li>
+    </ul>
+
+    <p style="text-align: center; color: black;">
+      $$ y_t = y_{t-m} + \varepsilon_t $$
+    </p>
+
+    <p style="color: black;">
+      \( y_t - y_{t-m} \)가 평균 0인 white noise라면, 가장 좋은 예측값은 \( y_{t-m} \)입니다.
+      이러한 모형을 <strong>seasonal random walk</strong>라고 합니다.
+    </p>
+
+    <hr style="border-color: rgba(255,255,255,0.1); margin: 30px 0;">
+
+    <h4 style="color: #bfa25a;">Drift를 가진 Random Walk</h4>
+    <p style="color: black;">
+      만약 \( y_t - y_{t-1} \)의 평균이 0이 아니라면 다음과 같이 표현됩니다:
+    </p>
+
+    <p style="text-align: center; color: black;">
+      $$ y_t - y_{t-1} = \theta + \varepsilon_t \quad \Rightarrow \quad y_t = y_{t-1} + \theta + \varepsilon_t $$
+    </p>
+
+    <p style="color: black;">
+      이때 \( y_t \)는 뚜렷한 선형 추세를 가지며, 이를 <strong>random walk with drift</strong>라고 합니다.
+    </p>
+
+    <hr style="border-color: rgba(255,255,255,0.1); margin: 30px 0;">
+
+    <h4 style="color: #bfa25a;">💻 Darts로 구현하는 예측</h4>
+    <p style="color: black;">다음은 Darts 라이브러리를 활용한 실습 예제입니다:</p>
+
+    <pre style="background:#222; color:#eee; padding:15px; border-radius:8px; overflow-x:auto;">
+    from darts.datasets import AirPassengersDataset
+    import pandas as pd
+    from darts.models import NaiveSeasonal
+
+    series = AirPassengersDataset().load()
+    series.plot()
+    train, val = series.split_before(pd.Timestamp("19580101"))
+
+    naive_model = NaiveSeasonal(K=1)
+    naive_model.fit(train)
+    naive_forecast = naive_model.predict(36)
+    series.plot(label="actual")
+    naive_forecast.plot(label="naive forecast (K=1)")
+    </pre>
+
+    <div style="text-align: center; margin: 25px 0;">
+      <img src="{% static 'naive_img1.png' %}" alt="Naive Forecast Result" style="max-width: 100%; width: 600px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
     </div>
 
-    <p style="color: #aaa; margin-top: 20px;">
-      Naive 모델은 계절성, 추세 없이 데이터를 단순히 반복하는 형태일 때 baseline 모델로 많이 활용됩니다.
-    </p>
+
+    <p style="color: black">→ 학습 데이터의 마지막 값을 반복하여 예측하므로 단순하지만 baseline으로 적합합니다.</p>
+
+    <h5 style="margin-top:20px; color: #00ccff;">✅ Seasonal Naive 예측 (K=12)</h5>
+
+    <pre style="background:#222; color:#eee; padding:15px; border-radius:8px; overflow-x:auto;">
+    seasonal_model = NaiveSeasonal(K=12)
+    seasonal_model.fit(train)
+    seasonal_forecast = seasonal_model.predict(36)
+    series.plot(label="actual")
+    seasonal_forecast.plot(label="naive forecast (K=12)")
+    </pre>
+
+    <div style="text-align: center; margin: 25px 0;">
+      <img src="{% static 'naive_img2.png' %}" alt="Naive Forecast Result 2" style="max-width: 100%; width: 600px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+    </div>
+
+    <p style="color: black;">→ 학습 데이터 마지막 12개를 3번 반복하여 예측. 성능 개선됨.</p>
+
+    <h5 style="margin-top:20px; color: #ff9999;">📈 Drift 포함한 Random Walk</h5>
+
+    <pre style="background:#222; color:#eee; padding:15px; border-radius:8px; overflow-x:auto;">
+    from darts.models import NaiveDrift
+    drift_model = NaiveDrift()
+    drift_model.fit(train)
+    drift_forecast = drift_model.predict(36)
+    combined_forecast = drift_forecast + seasonal_forecast - train.last_value()
+    series.plot()
+    combined_forecast.plot(label="combined")
+    drift_forecast.plot(label="drift")
+    </pre>
+
+    <div style="text-align: center; margin: 25px 0;">
+      <img src="{% static 'naive_img3.png' %}" alt="Naive Forecast Result 3" style="max-width: 100%; width: 600px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+    </div>
+
+    <p style="color: black;">→ 단순 선형회귀처럼 동작하며, drift + seasonality 조합이 더 좋은 결과를 냅니다.</p>
   </div>
+
 </div>
+
+<!-- ✅ 햄버거 토글 Script -->
+<script>
+</script>
+
 {% endblock %}

@@ -17,9 +17,170 @@
     <meta name="twitter:title" content="SimpleQuant" />
     <meta name="twitter:description" content="Intelligent Market Analysis with LLM & Machine Learning" />
     <meta name="twitter:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'unicorn_v2.png' %}?v=10" />
+
+    <style>
+        .hamburger-menu {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            cursor: pointer;
+            z-index: 1100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 45px;
+            height: 45px;
+            background-color: rgba(50, 50, 50, 0.8);
+            border-radius: 8px;
+            padding: 8px;
+            transition: background 0.3s ease-in-out;
+        }
+
+        .hamburger-menu div {
+            width: 35px;
+            height: 4px;
+            background-color: white;
+            margin: 5px 0;
+            transition: 0.4s;
+        }
+
+        .hamburger-menu:hover {
+            background-color: rgba(80, 80, 80, 0.9);
+        }
+
+        .sidebar {
+            width: 260px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            right: -280px;
+            background-color: #121212;
+            color: white;
+            padding: 20px;
+            transition: right 0.4s ease-in-out;
+            box-shadow: -4px 0px 10px rgba(255, 255, 255, 0.2);
+            z-index: 1099;
+        }
+
+        .sidebar a {
+            display: block;
+            color: white;
+            padding: 15px;
+            text-decoration: none;
+            font-size: 18px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            transition: background 0.3s;
+        }
+
+        .sidebar a:hover {
+            background-color: #333;
+        }
+
+        .close-btn {
+            font-size: 25px;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            cursor: pointer;
+        }
+
+        .crypto-submenu {
+            display: none;
+            margin-left: 10px;
+        }
+
+        .crypto-submenu.show {
+            display: block;
+        }
+
+        .crypto-toggle {
+            color: #bfa25a;
+            font-size: 16px;
+            margin-top: 10px;
+            display: block;
+            cursor: pointer;
+            border: none;
+            background: none;
+            padding: 10px 0;
+            font-weight: bold;
+            text-align: left;
+        }
+
+        .show-sidebar {
+            right: 0;
+        }
+
+        .sidebar strong {
+            margin-top: 20px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+    </style>
 </head>
 <body>
-{% block content %}
-{% endblock %}
+    <!-- ✅ 햄버거 & 사이드바 기본 템플릿 구성 -->
+    <div class="hamburger-menu" onclick="toggleSidebar()">
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+
+    <div id="sidebar" class="sidebar">
+        <span class="close-btn" onclick="toggleSidebar()">✖</span>
+        <a href="{% url 'home-page' %}">Home</a>
+        <a href="{% url 'support' %}">후원</a>
+        <hr style="border-color: rgba(255, 255, 255, 0.2); margin: 15px 0;">
+        <button class="crypto-toggle" onclick="toggleCryptoMenu()">Our Crypto Portfolio ▼</button>
+        <div id="crypto-submenu" class="crypto-submenu">
+            <a href="/BTC/">BTC</a>
+            <a href="/ETH/">ETH</a>
+            <a href="/SOL/">SOL</a>
+            <a href="/XRP/">XRP</a>
+            <a href="/ADA/">ADA</a>
+            <a href="/XLM/">XLM</a>
+            <a href="/SUI/">SUI</a>
+            <a href="/LINK/">LINK</a>
+            <a href="/ONDO/">ONDO</a>
+        </div>
+        <hr style="border-color: rgba(255, 255, 255, 0.2); margin: 15px 0;">
+        <button class="crypto-toggle" onclick="location.href='/high-risk/'">High Risk Crypto Portfolio</button>
+        <hr style="border-color: rgba(255, 255, 255, 0.2); margin: 15px 0;">
+        <button class="crypto-toggle" onclick="toggleTimeSeriesMenu()">Time Series Analysis ▼</button>
+        <div id="time-series-submenu" class="crypto-submenu">
+            <a href="{% url 'basic-term' %}">정상과 비정상 시계열</a>
+            <a href="{% url 'naive-model' %}">Random Walk</a>
+        </div>
+        <hr style="border-color: rgba(255, 255, 255, 0.2); margin: 15px 0;">
+        <button class="crypto-toggle" onclick="togglePortfolioTheoryMenu()">Portfolio Theory ▼</button>
+        <div id="portfolio-theory-submenu" class="crypto-submenu">
+            <a href="#">이자율과 시간 가치</a>
+            <a href="#">NPV와 IRR</a>
+        </div>
+    </div>
+
+    {% block content %}{% endblock %}
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById("sidebar");
+            sidebar.classList.toggle("show-sidebar");
+        }
+
+        function toggleCryptoMenu() {
+            const submenu = document.getElementById("crypto-submenu");
+            submenu.classList.toggle("show");
+        }
+
+        function toggleTimeSeriesMenu() {
+            const submenu = document.getElementById("time-series-submenu");
+            submenu.classList.toggle("show");
+        }
+
+        function togglePortfolioTheoryMenu() {
+            const submenu = document.getElementById("portfolio-theory-submenu");
+            submenu.classList.toggle("show");
+        }
+    </script>
 </body>
 </html>

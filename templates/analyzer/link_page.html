@@ -466,35 +466,6 @@ h1 {
 </style>
 
 <div class="container">
-    <!-- ✅ Fixed Hamburger Menu Icon -->
-    <div class="hamburger-menu" onclick="toggleSidebar()">
-        <div></div>
-        <div></div>
-        <div></div>
-    </div>
-
-    <!-- ✅ Sidebar Navigation -->
-    <div id="sidebar" class="sidebar">
-        <span class="close-btn" onclick="toggleSidebar()">✖</span>
-        <a href="{% url 'home-page' %}">Home</a>
-        <a href="{% url 'support' %}">후원</a>
-        <hr style="border-color: rgba(255, 255, 255, 0.2); margin: 15px 0;">
-        <button class="crypto-toggle" onclick="toggleCryptoMenu()">Our Crypto Portfolio ▼</button>
-        <div id="crypto-submenu" class="crypto-submenu">
-          <a href="/BTC/">BTC</a>
-          <a href="/ETH/">ETH</a>
-          <a href="/SOL/">SOL</a>
-          <a href="/XRP/">XRP</a>
-          <a href="/ADA/">ADA</a>
-          <a href="/XLM/">XLM</a>
-          <a href="/SUI/">SUI</a>
-          <a href="#">LINK</a>
-          <a href="/ONDO/">ONDO</a>
-        </div>
-        <hr style="border-color: rgba(255, 255, 255, 0.2); margin: 15px 0;">
-        <button class="crypto-toggle" onclick="location.href='/high-risk/'">High Risk Crypto Portfolio</button>
-        <hr style="border-color: rgba(255, 255, 255, 0.2); margin: 15px 0;">
-    </div>
 
     <h1><a href="{% url 'home-page' %}" style="color:  #bfa25a; text-decoration: none;">Simple Quant Labs</a></h1>
     <h3 style="display: flex; align-items: center; gap: 10px;">
@@ -583,17 +554,6 @@ h1 {
 </div>
 
 <script>
-// ✅ Sidebar Toggle Function
-function toggleSidebar() {
-    const sidebar = document.getElementById("sidebar");
-    sidebar.classList.toggle("show-sidebar");
-}
-
-function toggleCryptoMenu() {
-    const submenu = document.getElementById("crypto-submenu");
-    submenu.classList.toggle("show");
-}
-
 document.addEventListener("DOMContentLoaded", function() {
     const sidebar = document.getElementById("sidebar");
     const hamburger = document.querySelector(".hamburger-menu");

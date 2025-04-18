@@ -59,4 +59,5 @@ urlpatterns = [
     path("get-ondo-technical-analysis/", ondo_views.get_ondo_technical_analysis, name="get-ondo-technical-analysis"),
 
     path("time-series/naive-model/", timeseries_views.naive_model, name="naive-model"),
+    path("time-series/basic-terminologies/", timeseries_views.basic_terms, name="basic-term"),
 ]

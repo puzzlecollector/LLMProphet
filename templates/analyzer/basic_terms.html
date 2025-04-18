@@ -1,0 +1,178 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<!-- ✅ 햄버거 메뉴 + 사이드바 스타일 복사 -->
+<style>
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 40px 20px;
+  }
+
+  .hamburger-menu {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+    z-index: 1100;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    height: 45px;
+    background-color: rgba(50, 50, 50, 0.8);
+    border-radius: 8px;
+    padding: 8px;
+    transition: background 0.3s ease-in-out;
+  }
+
+  .hamburger-menu div {
+    width: 35px;
+    height: 4px;
+    background-color: white;
+    margin: 5px 0;
+    transition: 0.4s;
+  }
+
+  .hamburger-menu:hover {
+    background-color: rgba(80, 80, 80, 0.9);
+  }
+
+  .sidebar {
+    width: 260px;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    right: -280px;
+    background-color: #121212;
+    color: white;
+    padding: 20px;
+    transition: right 0.4s ease-in-out;
+    box-shadow: -4px 0px 10px rgba(255, 255, 255, 0.2);
+    z-index: 1099;
+  }
+
+  .sidebar a {
+    display: block;
+    color: white;
+    padding: 15px;
+    text-decoration: none;
+    font-size: 18px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    transition: background 0.3s;
+  }
+
+  .sidebar a:hover {
+    background-color: #333;
+  }
+
+  .close-btn {
+    font-size: 25px;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    cursor: pointer;
+  }
+
+  .crypto-submenu {
+    display: none;
+    margin-left: 10px;
+  }
+
+  .crypto-submenu.show {
+    display: block;
+  }
+
+  .crypto-toggle {
+    color: #bfa25a;
+    font-size: 16px;
+    margin-top: 10px;
+    display: block;
+    cursor: pointer;
+    border: none;
+    background: none;
+    padding: 10px 0;
+    font-weight: bold;
+    text-align: left;
+  }
+
+  .show-sidebar {
+    right: 0;
+  }
+
+  .sidebar strong {
+    margin-top: 20px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+  }
+</style>
+
+<!-- ✅ 원래 Target 콘텐츠 유지 -->
+<!-- MathJax 적용 -->
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']]
+    },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+<div class="container">
+  <!-- 🔶 Simple Quant Labs 상단 타이틀 -->
+  <h1 style="margin-top: 20px; text-align: left;">
+    <a href="{% url 'home-page' %}" style="color: #bfa25a; text-decoration: none;">Simple Quant Labs</a>
+  </h1>
+
+  <div class="analysis-container" style="margin-top: 20px;">
+    <h3 style="color: #bfa25a;">정상과 비정상 시계열</h3>
+    <p style="color: black;">정상 시계열 (stationary time series)와 비정상 시계열 (non-stationary time series)는 시계열 예측에서 가장 기초적이고 많이 등장하는 개념이라 집고 넘어갑니다.</p>
+
+    <p style="color: black; margin-top: 20px;">
+        <strong>정상 시계열의 정의:</strong> 시계열의 통계적 성질 (평균, 분산, 공분산)이 시간에 따라 변하지 않는 시계열입니다. 즉 다음과 같은 조건을 만족하면 정상 시계열로 볼 수 있습니다:
+    </p>
+
+    <ul style="color: black; margin-left: 20px; line-height: 1.6;">
+        <li><strong>Mean (평균)</strong>이 시간에 따라 일정해야 함</li>
+        <li><strong>Variance (분산)</strong>이 시간에 따라 일정해야 함</li>
+        <li><strong>Covariance (공분산)</strong>이 시간 간격(시간 차)에만 의존하고 실제 시점에는 의존하지 않아야 함</li>
+    </ul>
+
+    예시: 주식의 수익률 데이터, 온도나 기압의 일일 차이
+
+
+    <p style="color: black; margin-top: 20px;">
+        <strong>비정상 시계열의 정의:</strong> 시계열의 평균이나 분산이 시간에 따라 변하는 시계열. 즉, 위 정상 조건 중 하나라도 안 맞으면 비정상. 다음과 같은 특징이 있습니다.
+    </p>
+    <ul style="color: black; margin-left: 20px; line-height: 1.6;">
+        <li>추세 (trend)가 있는 경우 (꾸준히 증가나 감소)</li>
+        <li>계절성 (seasonality)가 있는 경우 (e.g. 여름에 에어컨 사용량 증가)</li>
+        <li>분산이 점점 커지거나 줄어드는 경우</li>
+    </ul>
+    예시: 주식의 가격 데이터, 월별 소비자 물가 지수, 한 국가의 GDP 추이
+  </div>
+  <!-- ✅ 비정상 시계열 예시 이미지 삽입 -->
+  <div style="margin-top: 25px; text-align: center;">
+    <img src="{% static 'ts_basics1.png' %}" alt="정상과 비정상 시계열 예시" style="max-width: 100%; border-radius: 8px; box-shadow: 0 0 12px rgba(0,0,0,0.2);">
+    <p style="color: #666; font-size: 14px; margin-top: 8px;">정상 시계열 vs 비정상 시계열의 예시 그래프</p>
+  </div>
+
+  <p style="color: black; margin-top: 20px;">
+      정상성은 많은 고전 시계열 모형 (e.g. AR, ARIMA)의 기본 전제입니다. 따라서 이러한 모형을 적용하기 전에 시계열을 비정상에서 정상으로 만들어주는 작업이 필요합니다. 이때 사용할 수 있는 방법은 다음과 같습니다:
+  </p>
+  <ul style="color: black; margin-left: 20px; line-height: 1.6;">
+    <li>차분 (differencing)</li>
+    <li>로그 변환 (log transformation)</li>
+    <li>트렌드 제거: 회귀 등을 통해 추세 성분을 제거</li>
+  </ul>
+</div>
+
+<!-- ✅ 햄버거 토글 Script -->
+<script>
+</script>
+
+{% endblock %}

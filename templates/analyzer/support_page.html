@@ -228,43 +228,11 @@
 </style>
 
 <div class="container my-5">
-    <!-- ✅ Fixed Hamburger Menu Icon -->
-    <div class="hamburger-menu" onclick="toggleSidebar()">
-        <div></div>
-        <div></div>
-        <div></div>
-    </div>
-
-    <!-- ✅ Sidebar Navigation -->
-    <div id="sidebar" class="sidebar">
-        <span class="close-btn" onclick="toggleSidebar()">✖</span>
-        <a href="{% url 'home-page' %}">Home</a>
-        <a href="{% url 'support' %}">후원</a>
-        <hr style="border-color: rgba(255, 255, 255, 0.2); margin: 15px 0;">
-        <button class="crypto-toggle" onclick="toggleCryptoMenu()">Our Crypto Portfolio ▼</button>
-        <div id="crypto-submenu" class="crypto-submenu">
-          <a href="/BTC/">BTC</a>
-          <a href="/ETH/">ETH</a>
-          <a href="/SOL/">SOL</a>
-          <a href="/XRP/">XRP</a>
-          <a href="/ADA/">ADA</a>
-          <a href="/XLM/">XLM</a>
-          <a href="/SUI/">SUI</a>
-          <a href="/LINK/">LINK</a>
-          <a href="/ONDO/">ONDO</a>
-        </div>
-        <hr style="border-color: rgba(255, 255, 255, 0.2); margin: 15px 0;">
-        <button class="crypto-toggle" onclick="location.href='/high-risk/'">High Risk Crypto Portfolio</button>
-        <hr style="border-color: rgba(255, 255, 255, 0.2); margin: 15px 0;">
-    </div>
-
     <div class="donation-container">
         <h2>💰 후원하기</h2>
         <p class="donation-description">
-            소중한 후원에 진심으로 감사드립니다!<br>
             후원금은 프로젝트의 운영, 개발 및 유지보수에 소중히 사용됩니다.<br>
             또한 시계열 예측 연구 등 더욱 발전된 기술 개발을 위해 활용될 예정입니다.<br>
-            작은 정성 하나하나가 큰 힘이 됩니다. 🙏
         </p>
 
         <!-- 비트코인 -->
@@ -275,7 +243,19 @@
             </div>
             <div class="crypto-address">
                 <span id="btc-address">19nr3xYe4M7o4XMfS7ggAe9vDwrxrCFAjv</span>
-                <button class="copy-btn" onclick="copyToClipboard('btc-address')">📋 복사</button>
+                <button class="copy-btn" onclick="copyToClipboard('btc-address')">📋</button>
+            </div>
+        </div>
+
+        <!-- 리플 -->
+        <div class="crypto-section">
+            <div class="crypto-header">
+                <img src="{% static 'xrp.png' %}" alt="XRP">
+                <h3>리플 (XRP)</h3>
+            </div>
+            <div class="crypto-address">
+                <span id="xrp-address">rJzF6DHnwa2qx2gRART3w8rJaNeYGMweSg</span>
+                <button class="copy-btn" onclick="copyToClipboard('xrp-address')">📋</button>
             </div>
         </div>
 
@@ -287,7 +267,7 @@
             </div>
             <div class="crypto-address">
                 <span id="eth-address">0x6E8960fb316C7202CbFe4277bBc30e9f95443bdf</span>
-                <button class="copy-btn" onclick="copyToClipboard('eth-address')">📋 복사</button>
+                <button class="copy-btn" onclick="copyToClipboard('eth-address')">📋</button>
             </div>
         </div>
 
@@ -299,7 +279,7 @@
             </div>
             <div class="crypto-address">
                 <span id="usdt-trc-address">TXWWs25cpduAYocsnMRedpZPC2z7r78X5b</span>
-                <button class="copy-btn" onclick="copyToClipboard('usdt-trc-address')">📋 복사</button>
+                <button class="copy-btn" onclick="copyToClipboard('usdt-trc-address')">📋</button>
             </div>
         </div>
 
@@ -311,7 +291,7 @@
             </div>
             <div class="crypto-address">
                 <span id="usdt-erc-address">0x6E8960fb316C7202CbFe4277bBc30e9f95443bdf</span>
-                <button class="copy-btn" onclick="copyToClipboard('usdt-erc-address')">📋 복사</button>
+                <button class="copy-btn" onclick="copyToClipboard('usdt-erc-address')">📋</button>
             </div>
         </div>
         <button class="btn-donate">감사합니다!</button>
@@ -319,18 +299,6 @@
 </div>
 
 <script>
-    // ✅ Sidebar Toggle Function
-    function toggleSidebar() {
-        const sidebar = document.getElementById("sidebar");
-        sidebar.classList.toggle("show-sidebar");
-    }
-
-    function toggleCryptoMenu() {
-        const submenu = document.getElementById("crypto-submenu");
-        submenu.classList.toggle("show");
-    }
-
-
     function copyToClipboard(id) {
         var copyText = document.getElementById(id).innerText;
         navigator.clipboard.writeText(copyText).then(() => {
