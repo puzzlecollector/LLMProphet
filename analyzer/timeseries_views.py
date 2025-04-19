@@ -8,3 +8,6 @@ def basic_terms(request):
 
 def naive_model(request):
     return render(request, "analyzer/naive_model.html")
+
+def classical_decomposition(request):
+    return render(request, "analyzer/classical_decomposition.html")

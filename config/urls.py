@@ -60,4 +60,5 @@ urlpatterns = [
 
     path("time-series/naive-model/", timeseries_views.naive_model, name="naive-model"),
     path("time-series/basic-terminologies/", timeseries_views.basic_terms, name="basic-term"),
+    path("time-series/classical-decomposition/", timeseries_views.classical_decomposition, name="classical-decomposition"),
 ]
