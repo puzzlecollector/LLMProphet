@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<!-- ✅ MathJax for LaTeX -->
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']]
+    },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+<div class="container">
+  <h1 style="margin-top: 20px; text-align: left;">
+    <a href="{% url 'home-page' %}" style="color: #bfa25a; text-decoration: none;">Simple Quant Labs</a>
+  </h1>
+
+  <div class="analysis-container" style="margin-top: 40px;">
+    <h3 style="color: #bfa25a;">📊 Exponential Smoothing</h3>
+    <p style="color: black;">
+      시계열 \( y_t, y_{t-1}, \ldots, y_1 \)이 주어졌을 때, \( y_{t+1} \)의 예측치를 \( y_{t+1|t} \)로 표기합니다.
+      <br>
+      <strong>Random walk</strong>의 경우:
+    </p>
+
+    <p style="text-align: center; color: black">
+      $$ y_{t+1} = y_t + \varepsilon_{t+1} \Rightarrow y_{t+1|t} = y_t $$
+    </p>
+
+    <p style="color: black;">
+      즉, 예측에 오직 \( y_t \)만을 사용하며 나머지 과거 관측치는 사용하지 않습니다.<br>
+      반면, <strong>평균 모형</strong>에서는:
+    </p>
+
+    <p style="text-align: center; color: black">
+      $$ y_{t+1} = \mu + \varepsilon_t \Rightarrow y_{t+1|t} = \frac{1}{t} \sum_{i=1}^t y_i $$
+    </p>
+
+    <p style="color: black;">
+      즉, 전체 과거 데이터를 동일한 가중치로 평균하여 예측합니다.
+    </p>
+
+    <hr style="border-color: rgba(255,255,255,0.1); margin: 30px 0;">
+
+    <h4 style="color: #bfa25a;">📌 Exponential Smoothing 기본 아이디어</h4>
+    <p style="color: black;">
+      <strong>Exponential Smoothing</strong>은 과거로 갈수록 <strong>가중치가 지수적으로 감소</strong>하는 방식의 평균으로 예측합니다:
+    </p>
+
+    <p style="text-align: center; color: black">
+      $$ y_{t+1} = \alpha y_t + \alpha(1-\alpha)y_{t-1} + \alpha(1-\alpha)^2 y_{t-2} + \ldots + \alpha(1-\alpha)^t y_0 $$
+    </p>
+
+    <p style="color: black;">
+      여기서 \( 0 < \alpha < 1 \), \( \alpha \)는 <strong>초매개변수 (hyperparameter)</strong>로 예측 성능(MSE 등)을 기준으로 튜닝됩니다.
+    </p>
+
+    <p style="color: black;">
+      교과서에서는 다음 재귀식으로도 표현됩니다:
+    </p>
+
+    <p style="text-align: center; color: black">
+      $$ l_t = \alpha y_t + (1-\alpha) l_{t-1} $$
+    </p>
+
+    <p style="color: black;">
+      이를 반복적으로 전개하면 결국:
+    </p>
+
+    <p style="text-align: center; color: black">
+      $$ l_t = \alpha y_t + \alpha(1-\alpha)y_{t-1} + \alpha(1-\alpha)^2 y_{t-2} + \ldots + \alpha(1-\alpha)^t l_0 $$
+    </p>
+
+    <p style="color: black;">
+      \( l_0 = y_0 \)로 두면 기존의 지수평활 수식과 동일하게 됩니다.
+      예측값은 다음과 같이 정의됩니다:
+    </p>
+
+    <p style="text-align: center; color: black">
+      $$ y_{t+1|t} = l_t $$
+    </p>
+
+    <p style="color: black;">
+      따라서, 최근 값일수록 더 큰 영향을 주는 평균을 이용해 다음 시점을 예측하는 방식이며, <strong>추세나 계절성이 없는 시계열</strong>에 적합합니다.
+    </p>
+
+    <hr style="border-color: rgba(255,255,255,0.1); margin: 30px 0;">
+
+    <h4 style="color: #bfa25a;">💻 Python 예제 (BTC 시계열 예측)</h4>
+
+    <pre style="background:#222; color:#eee; padding:15px; border-radius:8px; overflow-x:auto;">
+import ccxt
+import pandas as pd
+from statsmodels.tsa.holtwinters import SimpleExpSmoothing
+
+exchange = ccxt.mexc()
+symbol = 'BTC/USDT'
+timeframe = '1h'
+ohlcv = exchange.fetch_ohlcv(symbol, timeframe=timeframe, limit=200)
+
+# OHLCV to DataFrame
+df = pd.DataFrame(ohlcv, columns=['timestamp', 'open', 'high', 'low', 'close', 'volume'])
+df['datetime'] = pd.to_datetime(df['timestamp'], unit='ms')
+
+close_prices = df['close']
+model = SimpleExpSmoothing(close_prices)
+fit_model = model.fit(smoothing_level=0.3, optimized=False)
+
+forecast = fit_model.forecast(1)
+print(f"\U0001F4C8 최근 가격: {close_prices.iloc[-1]}")
+print(f"\U0001F52E 예측된 다음 가격: {forecast.iloc[0]}")
+    </pre>
+
+    <p style="color: black;">→ \( \alpha = 0.3 \)으로 설정한 단순 지수평활법 모델을 통해, 최근 비트코인 가격 기반 예측을 수행합니다.</p>
+  </div>
+</div>
+
+{% endblock %}

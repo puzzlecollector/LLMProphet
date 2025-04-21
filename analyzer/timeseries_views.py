@@ -11,3 +11,6 @@ def naive_model(request):
 
 def classical_decomposition(request):
     return render(request, "analyzer/classical_decomposition.html")
+
+def exponential_smoothing(request):
+    return render(request, "analyzer/exponential_smoothing.html")
