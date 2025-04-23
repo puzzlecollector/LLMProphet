@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<!-- ✅ MathJax for LaTeX -->
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']]
+    },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+<div class="container">
+  <h1 style="margin-top: 20px; text-align: left;">
+    <a href="{% url 'home-page' %}" style="color: #bfa25a; text-decoration: none;">Simple Quant Labs</a>
+  </h1>
+
+  <div class="analysis-container" style="margin-top: 40px;">
+    <h3 style="color: #bfa25a;">Holt-Winters Seasonal Model</h3>
+
+    <p style="color: black;">
+      Holt-Winters 모형은 지수 평활법에서 발전한 형태로, <strong>레벨(level)</strong>, <strong>추세(trend)</strong>, <strong>계절성(seasonality)</strong>을 모두 고려한 예측 방법입니다.
+      이전 Holt's Linear Trend 모델에서 추세만 고려했다면, 이제는 추세와 계절성 둘 다 고려하는거죠.
+    </p>
+
+    <p style="color: black;">
+      기본적으로 <strong>가법(additive)</strong> 모델과 <strong>승법(multiplicative)</strong> 모델 두 가지가 있으며, 데이터의 계절성 패턴이 <strong>level의 크기와 독립적이면 가법</strong>, <strong>비례적으로 변하면 승법</strong>을 사용합니다.
+    </p>
+
+    <h4 style="color: #bfa25a;">가법 모델 (Additive)</h4>
+    <p style="color: black;">
+      계절성이 일정한 절대 크기로 반복되는 경우 사용합니다.
+    </p>
+
+    <p style="text-align: center; color: black">
+      $$
+      \begin{align*}
+      l_t &= \alpha (y_t - s_{t-m}) + (1 - \alpha)(l_{t-1} + b_{t-1}) \\
+      b_t &= \beta (l_t - l_{t-1}) + (1 - \beta) b_{t-1} \\
+      s_t &= \gamma (y_t - l_t) + (1 - \gamma) s_{t-m} \\
+      \hat{y}_{t+h|t} &= l_t + h b_t + s_{t+h-m(k+1)}
+      \end{align*}
+      $$
+    </p>
+
+    <h4 style="color: #bfa25a;">승법 모델 (Multiplicative)</h4>
+    <p style="color: black;">
+      계절성이 level에 비례하여 커졌다 작아지는 경우 사용합니다.
+    </p>
+
+    <p style="text-align: center; color: black">
+      $$
+      \begin{align*}
+      l_t &= \alpha \left(\frac{y_t}{s_{t-m}}\right) + (1 - \alpha)(l_{t-1} + b_{t-1}) \\
+      b_t &= \beta (l_t - l_{t-1}) + (1 - \beta) b_{t-1} \\
+      s_t &= \gamma \left(\frac{y_t}{l_t}\right) + (1 - \gamma) s_{t-m} \\
+      \hat{y}_{t+h|t} &= (l_t + h b_t) \cdot s_{t+h-m(k+1)}
+      \end{align*}
+      $$
+    </p>
+
+    <p style="color: black;">
+      여기서 \( m \)은 계절 주기 (예: 월별 데이터일 경우 12),<br>
+      \( k = \left\lfloor \frac{h-1}{m} \right\rfloor \) 은 계절 인덱스를 반복 맞추기 위한 정수입니다.<br>
+      \( \alpha, \beta, \gamma \)는 각각 레벨, 추세, 계절성에 대한 반응도입니다.
+    </p>
+
+    <h4 style="color: #bfa25a;">가법 vs 승법 선택 기준</h4>
+
+    <p style="color: black;">
+      그럼 “level과 무관하게 주기성이 있다”는 건 무슨 뜻일까요?
+    </p>
+    <p style="color: black;">
+      ▶ 예시 1: <strong>가법 모델이 적절한 경우</strong><br>
+      매출이 계절에 따라 항상 <code>+20 / -20</code>씩 변한다고 해볼게요.<br>
+      - 여름에는 항상 +20<br>
+      - 겨울에는 항상 -20<br><br>
+      그런데 전체 매출 규모가 <code>100 → 110 → 120</code>처럼 오르고 있다면?<br>
+      → 계절 효과는 level과 관계없이 <strong>항상 일정</strong>하므로 ➤ 가법 모델이 적절합니다.
+    </p>
+
+    <p style="color: black;">
+      반대로 “level에 따라 계절성이 달라진다”는 건?<br>
+      ▶ 예시 2: <strong>승법 모델이 적절한 경우</strong><br>
+      - 초반에 매출이 100인데 여름에 20% 상승 → 120<br>
+      - 나중에 매출이 300이 되면 여름엔 20% 상승 → 360<br><br>
+      즉, 계절 효과가 비율로 작용하고 있고, 매출이 클수록 계절 효과도 커집니다.<br>
+      → 이런 경우 ➤ 승법 모델이 적절합니다.
+    </p>
+
+    <h4 style="color: #bfa25a;">요약</h4>
+    <p style="color: black;">
+      Holt-Winters 모델은 추세와 계절성을 모두 반영하여 더 현실적인 시계열 예측이 가능합니다.
+      계절성이 명확한 데이터에 특히 유리하며, <strong>level 수준에 따른 계절 영향의 형태</strong>에 따라
+      가법 또는 승법 모델을 선택합니다.
+    </p>
+
+    <h4 style="color: #bfa25a;">Darts 활용 예제</h4>
+    <p style="color: black;">
+      Darts 라이브러리의 <code>ExponentialSmoothing</code>을 사용하면 trend와 seasonality 모드 및 damped 옵션을 간단히 설정할 수 있습니다.
+      <br>아래는 <strong>승법 Holt-Winters 모형</strong>을 적용하여 AirPassengers 데이터를 기반으로 미래 10개월을 예측한 예시입니다.
+    </p>
+
+    <pre style="background:#222; color:#eee; padding:15px; border-radius:8px; overflow-x:auto;">
+    from darts.datasets import AirPassengersDataset
+    from darts.models import ExponentialSmoothing
+    from darts.utils.utils import ModelMode, SeasonalityMode
+
+    series = AirPassengersDataset().load()
+    model = ExponentialSmoothing(
+        trend=ModelMode.ADDITIVE,
+        damped=False,
+        seasonal=SeasonalityMode.MULTIPLICATIVE
+    )
+
+    model.fit(series)
+    pred = model.predict(10)
+    series.plot()
+    pred.plot(label="Holt-Winters Multiplicative")
+    </pre>
+
+    <p style="color: black;">
+      위 예시에서 <code>trend</code>는 <code>ModelMode.ADDITIVE</code> (기본값), <code>damped</code>는 False (기본값), <code>seasonal</code>은 <code>SeasonalityMode.MULTIPLICATIVE</code>로 지정하여, <strong>승법 계절성</strong>을 반영한 모델을 설정합니다.
+    </p>
+
+    <img src="{% static 'holt_winters1.png' %}" alt="holt-winters 예측 결과" style="margin-top: 20px; max-width: 100%; border-radius: 12px;">
+
+    <p style="color: black;">
+      응용해서 exponential smoothing에 계절성만 추가 (추세는 없는 상태로) 모델링도 가능은합니다 (흔하게 쓰이지는 않는듯요).
+    </p>
+  </div>
+</div>
+
+{% endblock %}

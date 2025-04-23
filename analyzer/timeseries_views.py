@@ -14,3 +14,9 @@ def classical_decomposition(request):
 
 def exponential_smoothing(request):
     return render(request, "analyzer/exponential_smoothing.html")
+
+def holts_linear(request):
+    return render(request, "analyzer/holts_linear.html")
+
+def holt_winters(request):
+    return render(request, "analyzer/holt_winters.html")

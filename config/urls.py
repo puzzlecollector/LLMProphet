@@ -62,4 +62,6 @@ urlpatterns = [
     path("time-series/basic-terminologies/", timeseries_views.basic_terms, name="basic-term"),
     path("time-series/classical-decomposition/", timeseries_views.classical_decomposition, name="classical-decomposition"),
     path("time-series/exponential-smoothing/", timeseries_views.exponential_smoothing, name="exponential-smoothing"),
+    path("time-series/holts-linear/", timeseries_views.holts_linear, name="holts-linear"),
+    path("time-series/holt-winters/", timeseries_views.holt_winters, name="holt-winters"),
 ]
