@@ -58,10 +58,13 @@
             background-color: #121212;
             color: white;
             padding: 20px;
+            padding-bottom: 60px; /* ✅ 추가된 부분 */
             transition: right 0.4s ease-in-out;
             box-shadow: -4px 0px 10px rgba(255, 255, 255, 0.2);
             z-index: 1099;
+            overflow-y: auto; /* ✅ 스크롤 추가 */
         }
+
 
         .sidebar a {
             display: block;
@@ -161,6 +164,7 @@
             <a href="#">이자율과 시간 가치</a>
             <a href="#">NPV와 IRR</a>
         </div>
+        <hr style="border-color: rgba(255, 255, 255, 0.2); margin: 15px 0;">
     </div>
 
     {% block content %}{% endblock %}

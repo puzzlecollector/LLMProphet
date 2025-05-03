@@ -41,7 +41,7 @@
       \begin{align*}
       l_t &= \alpha (y_t - s_{t-m}) + (1 - \alpha)(l_{t-1} + b_{t-1}) \\
       b_t &= \beta (l_t - l_{t-1}) + (1 - \beta) b_{t-1} \\
-      s_t &= \gamma (y_t - l_t) + (1 - \gamma) s_{t-m} \\
+      s_t &= \gamma (y_t - l_{t-1} - b_{t-1}) + (1 - \gamma) s_{t-m} \\
       \hat{y}_{t+h|t} &= l_t + h b_t + s_{t+h-m(k+1)}
       \end{align*}
       $$
@@ -57,7 +57,7 @@
       \begin{align*}
       l_t &= \alpha \left(\frac{y_t}{s_{t-m}}\right) + (1 - \alpha)(l_{t-1} + b_{t-1}) \\
       b_t &= \beta (l_t - l_{t-1}) + (1 - \beta) b_{t-1} \\
-      s_t &= \gamma \left(\frac{y_t}{l_t}\right) + (1 - \gamma) s_{t-m} \\
+      s_t &= \gamma \left(\frac{y_t}{l_{t-1} + b_{t-1}}\right) + (1 - \gamma) s_{t-m} \\
       \hat{y}_{t+h|t} &= (l_t + h b_t) \cdot s_{t+h-m(k+1)}
       \end{align*}
       $$
@@ -67,6 +67,30 @@
       여기서 \( m \)은 계절 주기 (예: 월별 데이터일 경우 12),<br>
       \( k = \left\lfloor \frac{h-1}{m} \right\rfloor \) 은 계절 인덱스를 반복 맞추기 위한 정수입니다.<br>
       \( \alpha, \beta, \gamma \)는 각각 레벨, 추세, 계절성에 대한 반응도입니다.
+    </p>
+
+    <h4 style="color: #bfa25a;">업데이트 식에 대한 쉬운 설명</h4>
+    <p style="text-align: left; color: black">
+      $$
+      \begin{align*}
+      l_t &= \alpha (y_t - s_{t-m}) + (1 - \alpha)(l_{t-1} + b_{t-1}) \\
+      \end{align*}
+      $$
+      level 업데이트는 현재 관측값 \( y_t \)에서 계절성을 제거한 값을 통해 순수한 level 을 파악하고, 예측한 level \( l_{t-1} + b_{t-1} \) 과 적절히 가중 평균한 것입니다.
+
+      $$
+      \begin{align*}
+      b_t &= \beta (l_t - l_{t-1}) + (1 - \beta) b_{t-1} \\
+      \end{align*}
+      $$
+      trend 업데이트는 level의 변화량 \(l_t - l_{t-1}\)과 이전 추세와의 가중 평균으로 업데이트 한다고 보면 됩니다.
+
+      $$
+      \begin{align*}
+      s_t = \gamma (y_t - l_{t-1} - b_{t-1}) + (1 - \gamma) s_{t-m}
+      \end{align*}
+      $$
+      마지막으로 계절성 업데이트로는 \( y_t - l_{t-1} - b_{t-1} \), 즉 실제 관측값에서 비계절적인 부분을 제거한 항과 \( s_{t-m} \), 과거 동일한 계절 시점의 계절성과의 가중평균을 기반으로 업데이트 한다.
     </p>
 
     <h4 style="color: #bfa25a;">가법 vs 승법 선택 기준</h4>
@@ -130,7 +154,7 @@
     <img src="{% static 'holt_winters1.png' %}" alt="holt-winters 예측 결과" style="margin-top: 20px; max-width: 100%; border-radius: 12px;">
 
     <p style="color: black;">
-      응용해서 exponential smoothing에 계절성만 추가 (추세는 없는 상태로) 모델링도 가능은합니다 (흔하게 쓰이지는 않는듯요).
+      추세 없이 계절성만 반영한 exponential smoothing도 가능하며, 이는 종종 단순 계절 모델(seasonal exponential smoothing)로 분류되기도 합니다. 다만, 실무에서는 trend와 seasonality를 함께 반영한 Holt-Winters 모델이 더 일반적으로 사용됩니다.
     </p>
   </div>
 </div>
