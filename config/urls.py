@@ -64,4 +64,5 @@ urlpatterns = [
     path("time-series/exponential-smoothing/", timeseries_views.exponential_smoothing, name="exponential-smoothing"),
     path("time-series/holts-linear/", timeseries_views.holts_linear, name="holts-linear"),
     path("time-series/holt-winters/", timeseries_views.holt_winters, name="holt-winters"),
+    path("time-series/ets/", timeseries_views.ets, name="ets"),
 ]

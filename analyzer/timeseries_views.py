@@ -20,3 +20,6 @@ def holts_linear(request):
 
 def holt_winters(request):
     return render(request, "analyzer/holt_winters.html")
+
+def ets(request):
+    return render(request, "analyzer/ets.html")

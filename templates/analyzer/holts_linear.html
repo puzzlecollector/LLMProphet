@@ -14,13 +14,13 @@
 </script>
 <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 
-<div class="container">
+<div class="container" style="max-width: 960px; margin: 0 auto; padding: 20px;">
   <h1 style="margin-top: 20px; text-align: left;">
     <a href="{% url 'home-page' %}" style="color: #bfa25a; text-decoration: none;">Simple Quant Labs</a>
   </h1>
 
   <div class="analysis-container" style="margin-top: 40px;">
-    <h3 style="color: #bfa25a;">📈 Holt's Linear Trend Model</h3>
+    <h3 style="color: #bfa25a;">Holt's Linear Trend Model</h3>
 
     <p style="color: black;">
       기존의 지수 평활법은 미래의 값이 현재처럼 "평평하게" 유지된다는 가정이 있습니다. 즉, 추세가 없고 일정한 값 주위에서 움직이는 데이터에만 적합합니다.<br>
@@ -48,20 +48,20 @@
 
     <hr style="margin: 30px 0;">
 
-    <h4 style="color: #bfa25a;">📌 Level 업데이트 해석</h4>
+    <h4 style="color: #bfa25a;">Level 업데이트 해석</h4>
     <p style="color: black;">
       \( l_t \)는 새로운 관측값 \( y_t \)와 과거 예측값 \( l_{t-1} + b_{t-1} \)의 가중 평균입니다.<br>
       \( \alpha \)가 클수록 최근 관측값에 민감하게 반응하며, 작을수록 부드럽게 반응합니다.
     </p>
 
-    <h4 style="color: #bfa25a;">📌 Trend 업데이트 해석</h4>
+    <h4 style="color: #bfa25a;">Trend 업데이트 해석</h4>
     <p style="color: black;">
       \( b_t \)는 현재 레벨 변화량 \( l_t - l_{t-1} \)과 과거 추세 \( b_{t-1} \)를 결합하여 추세를 업데이트합니다. 레벨이 계속 올라가면 양의 추세를 유지하게 될거고, 레벨이 줄어들게 되면 음의 추세로 바뀌게 될걸 알 수 있습니다.
     </p>
 
     <hr style="margin: 30px 0;">
 
-    <h3 style="color: #bfa25a;">📉 Holt's Damped Trend Model</h3>
+    <h3 style="color: #bfa25a;">Holt's Damped Trend Model</h3>
     <p style="color: black;">
       Holt의 선형 모델은 추세가 계속 증가하면 예측이 무한히 발산하는 단점이 있습니다.<br>
       현실에서는 추세가 <strong>점점 약해지거나 사라지는 경우</strong>가 많습니다.

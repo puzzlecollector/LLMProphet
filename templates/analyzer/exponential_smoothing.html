@@ -14,13 +14,13 @@
 </script>
 <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 
-<div class="container">
+<div class="container" style="max-width: 960px; margin: 0 auto; padding: 20px;">
   <h1 style="margin-top: 20px; text-align: left;">
     <a href="{% url 'home-page' %}" style="color: #bfa25a; text-decoration: none;">Simple Quant Labs</a>
   </h1>
 
   <div class="analysis-container" style="margin-top: 40px;">
-    <h3 style="color: #bfa25a;">📊 Exponential Smoothing</h3>
+    <h3 style="color: #bfa25a;">Exponential Smoothing</h3>
     <p style="color: black;">
       시계열 \( y_t, y_{t-1}, \ldots, y_1 \)이 주어졌을 때, \( y_{t+1} \)의 예측치를 \( y_{t+1|t} \)로 표기합니다.
       <br>
@@ -46,7 +46,7 @@
 
     <hr style="border-color: rgba(255,255,255,0.1); margin: 30px 0;">
 
-    <h4 style="color: #bfa25a;">📌 Exponential Smoothing 기본 아이디어</h4>
+    <h4 style="color: #bfa25a;">Exponential Smoothing 기본 아이디어</h4>
     <p style="color: black;">
       <strong>Exponential Smoothing</strong>은 과거로 갈수록 <strong>가중치가 지수적으로 감소</strong>하는 방식의 평균으로 예측합니다:
     </p>
@@ -90,7 +90,7 @@
 
     <hr style="border-color: rgba(255,255,255,0.1); margin: 30px 0;">
 
-    <h4 style="color: #bfa25a;">💻 Python 예제 (BTC 시계열 예측)</h4>
+    <h4 style="color: #bfa25a;">Python 예제 (BTC 시계열 예측)</h4>
 
     <pre style="background:#222; color:#eee; padding:15px; border-radius:8px; overflow-x:auto;">
 import ccxt

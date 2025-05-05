@@ -134,6 +134,23 @@
         <a href="{% url 'home-page' %}">Home</a>
         <a href="{% url 'support' %}">후원</a>
         <hr style="border-color: rgba(255, 255, 255, 0.2); margin: 15px 0;">
+        <button class="crypto-toggle" onclick="toggleTimeSeriesMenu()">Time Series Analysis ▼</button>
+        <div id="time-series-submenu" class="crypto-submenu">
+            <a href="{% url 'basic-term' %}">정상과 비정상 시계열</a>
+            <a href="{% url 'naive-model' %}">Random Walk</a>
+            <a href="{% url 'classical-decomposition' %}">Classical Decomposition</a>
+            <a href="{% url 'exponential-smoothing' %}">Exponential Smoothing</a>
+            <a href="{% url 'holts-linear' %}">Holt's Linear Trend Model</a>
+            <a href="{% url 'holt-winters' %}">Holt Winter's Seasonal Model</a>
+            <a href="{% url 'ets' %}">ETS Model</a>
+        </div>
+        <hr style="border-color: rgba(255, 255, 255, 0.2); margin: 15px 0;">
+        <button class="crypto-toggle" onclick="togglePortfolioTheoryMenu()">Portfolio Theory ▼</button>
+        <div id="portfolio-theory-submenu" class="crypto-submenu">
+            <a href="#">이자율과 시간 가치</a>
+            <a href="#">NPV와 IRR</a>
+        </div>
+        <hr style="border-color: rgba(255, 255, 255, 0.2); margin: 15px 0;">
         <button class="crypto-toggle" onclick="toggleCryptoMenu()">Our Crypto Portfolio ▼</button>
         <div id="crypto-submenu" class="crypto-submenu">
             <a href="/BTC/">BTC</a>
@@ -148,22 +165,6 @@
         </div>
         <hr style="border-color: rgba(255, 255, 255, 0.2); margin: 15px 0;">
         <button class="crypto-toggle" onclick="location.href='/high-risk/'">High Risk Crypto Portfolio</button>
-        <hr style="border-color: rgba(255, 255, 255, 0.2); margin: 15px 0;">
-        <button class="crypto-toggle" onclick="toggleTimeSeriesMenu()">Time Series Analysis ▼</button>
-        <div id="time-series-submenu" class="crypto-submenu">
-            <a href="{% url 'basic-term' %}">정상과 비정상 시계열</a>
-            <a href="{% url 'naive-model' %}">Random Walk</a>
-            <a href="{% url 'classical-decomposition' %}">Classical Decomposition</a>
-            <a href="{% url 'exponential-smoothing' %}">Exponential Smoothing</a>
-            <a href="{% url 'holts-linear' %}">Holt's Linear Trend Model</a>
-            <a href="{% url 'holt-winters' %}">Holt Winter's Seasonal Model</a>
-        </div>
-        <hr style="border-color: rgba(255, 255, 255, 0.2); margin: 15px 0;">
-        <button class="crypto-toggle" onclick="togglePortfolioTheoryMenu()">Portfolio Theory ▼</button>
-        <div id="portfolio-theory-submenu" class="crypto-submenu">
-            <a href="#">이자율과 시간 가치</a>
-            <a href="#">NPV와 IRR</a>
-        </div>
         <hr style="border-color: rgba(255, 255, 255, 0.2); margin: 15px 0;">
     </div>
 
