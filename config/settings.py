@@ -28,6 +28,11 @@ SECRET_KEY = 'django-insecure-q=br@_0opw=sw5_458romki10#w0x3_qwgld&etz$u80y6*3g7
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://simplequant.net',
+]
+
+
 ALLOWED_HOSTS = ["43.203.56.83", "localhost", "127.0.0.1", "simplequant.net"]
 
 # Application definition
