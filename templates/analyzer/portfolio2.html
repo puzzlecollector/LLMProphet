@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<!-- ✅ MathJax for LaTeX -->
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']]
+    },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+<div class="container" style="max-width: 960px; margin: 0 auto; padding: 20px;">
+  <h1 style="margin-top: 20px; text-align: left;">
+    <a href="{% url 'home-page' %}" style="color: #bfa25a; text-decoration: none;">Simple Quant Labs</a>
+  </h1>
+
+  <div class="analysis-container" style="margin-top: 40px;">
+
+    <h3 style="color: #bfa25a;">NPV와 IRR이란?</h3>
+    <p style="color: black;">
+      투자 결정을 내릴 때 가장 널리 사용되는 두 가지 지표가 바로 NPV (Net Present Value, 순현재가치)와 IRR (Internal Rate of Return, 내부수익률)입니다. 둘 다 미래 현금흐름을 기반으로 현재 가치 평가를 시도하는 방법이며, 프로젝트의 수익성과 효율성을 판단할 때 매우 유용합니다.
+    </p>
+
+    <h3 style="color: #bfa25a;">NPV (순현재가치)</h3>
+    <p style="color: black;">
+      순현재가치는 미래에 발생할 일련의 현금흐름을 현재 시점에서 평가한 값입니다. NPV가 0보다 크면 그 투자안은 기대수익이 기준 수익률(할인율)을 초과한다는 의미이고, 0보다 작다면 손실 가능성이 있는 프로젝트를 뜻합니다.
+    </p>
+
+    <p style="color: black; text-align: center;">
+      $$
+      \text{NPV} = \sum_{t=0}^{n} \frac{C_t}{(1 + r)^t}
+      $$
+    </p>
+
+    <ul style="color: black;">
+      <li>$C_t$: t 시점의 현금흐름 (초기 투자금은 보통 $C_0$로 음수)</li>
+      <li>$r$: 할인율 (요구수익률)</li>
+      <li>$n$: 총 투자 기간</li>
+    </ul>
+
+    <p style="color: black;">
+      예를 들어 어떤 프로젝트에 1년간 총 3번의 현금유입이 있을 때, 각 해마다 1,000만원이 들어오고 초기 투자금이 2,500만원이라면, 할인율이 10%일 때 NPV는 다음과 같이 계산됩니다:
+    </p>
+
+    <p style="text-align: center; color: black;">
+      $$
+      \text{NPV} = -2500 + \frac{1000}{1.1} + \frac{1000}{1.1^2} + \frac{1000}{1.1^3} \approx -13.15\ (\text{만원})
+      $$
+    </p>
+
+    <p style="color: black;">
+      NPV가 0보다 작으므로 이 투자안은 기준수익률(10%)에 도달하지 못하는 나쁜 투자라고 판단할 수 있습니다.
+    </p>
+
+    <h3 style="color: #bfa25a;">IRR (내부수익률)</h3>
+    <p style="color: black;">
+      내부수익률은 NPV가 0이 되도록 만드는 할인율을 의미합니다. 다시 말해, 미래 현금흐름들의 현재가치의 합이 정확히 초기 투자금과 같아지는 할인율입니다.
+    </p>
+
+    <p style="color: black; text-align: center;">
+      $$
+      \text{NPV} = \sum_{t=0}^{n} \frac{C_t}{(1 + \text{IRR})^t} = 0
+      $$
+    </p>
+
+    <p style="color: black;">
+      IRR은 주어진 투자안의 '내재 수익률'로, 이 값이 기준 할인율보다 크면 수익성이 있다고 판단합니다. 위의 예에서 IRR은 약 9.7%로 계산되며, 10%보다 작으므로 투자 매력이 없는 것으로 해석됩니다.
+    </p>
+
+    <h3 style="color: #bfa25a;">NPV vs IRR 비교</h3>
+    <ul style="color: black;">
+      <li><strong>NPV:</strong> 실제 현금 규모 기반의 절대 지표. 여러 프로젝트 중에서 가장 큰 가치를 창출하는 것을 선택할 때 유리.</li>
+      <li><strong>IRR:</strong> 수익률 기준의 상대 지표. 투자자가 요구하는 최소 수익률 이상인지 판단할 때 유용.</li>
+    </ul>
+
+    <p style="color: black;">
+      단, IRR은 현금흐름이 비정형적(부호가 여러 번 바뀌는 경우)이거나 복수의 IRR이 존재할 수 있어서 해석에 주의가 필요합니다.
+    </p>
+
+    <h3 style="color: #bfa25a;">실제 사용 시 유의사항</h3>
+    <ul style="color: black;">
+      <li>NPV는 <strong>규모가 클수록 유리</strong>한 프로젝트를 판단하는 데 강점</li>
+      <li>IRR은 <strong>비교적 직관적</strong>이지만 복수해가 있을 수 있어 NPV와 병행해서 분석하는 것이 좋음</li>
+      <li>할인율 선택이 결과에 큰 영향을 줌 ⇒ 통상 자본비용(WACC)을 할인율로 사용</li>
+    </ul>
+
+    <h3 style="color: #bfa25a;">Python 예시 코드</h3>
+    <pre style="background:#222; color:#eee; padding:15px; border-radius:8px; overflow-x:auto;">
+    import numpy as np
+    import numpy_financial as npf
+
+    # 현금흐름: 초기 투자금 -2500만원, 이후 3년간 매년 1000만원
+    cash_flows = [-2500, 1000, 1000, 1000]
+
+    npv = npf.npv(rate=0.1, values=cash_flows)
+    irr = npf.irr(values=cash_flows)
+
+    print(f"NPV: {npv:.2f}")
+    print(f"IRR: {irr*100:.2f}%")
+    </pre>
+
+    <p style="color: black;">
+      위 코드에서 NPV는 약 -13.15만원, IRR은 약 9.70%로 출력됩니다. 할인율이 10%일 때 NPV는 약 -13만원으로 손해입니다. IRR은 9.7% 수준으로 10% 할인율보다 낮아 투자 비추천입니다.
+    </p>
+
+  </div>
+</div>
+
+{% endblock %}

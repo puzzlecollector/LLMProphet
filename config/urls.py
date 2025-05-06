@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import RedirectView
-from analyzer import views, home_views, eth_views, sol_views, xrp_views, ada_views, xlm_views, sui_views, link_views, ondo_views, high_risk_crypto_views, timeseries_views
+from analyzer import views, home_views, eth_views, sol_views, xrp_views, ada_views, xlm_views, sui_views, link_views, ondo_views, high_risk_crypto_views, timeseries_views, portfolio_views
 
 urlpatterns = [
     path('', home_views.home_page, name="home"),
@@ -65,4 +65,8 @@ urlpatterns = [
     path("time-series/holts-linear/", timeseries_views.holts_linear, name="holts-linear"),
     path("time-series/holt-winters/", timeseries_views.holt_winters, name="holt-winters"),
     path("time-series/ets/", timeseries_views.ets, name="ets"),
+
+
+    path("portfolio/portfolio1/", portfolio_views.portfolio1, name="portfolio1"),
+    path("portfolio/portfolio2/", portfolio_views.portfolio2, name="portfolio2"),
 ]
