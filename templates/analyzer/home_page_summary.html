@@ -232,7 +232,7 @@
 
 
   <div class="analysis-container" style="margin-top: 40px; text-align: center;">
-    <h3 style="color: #bfa25a;">SQ Lab's Crypto Portfolio</h3>
+    <h3 style="color: #bfa25a;">Crypto Portfolio</h3>
     <small>📅 최근 업데이트: 2025.04.08</small><br>
     <small>저희가 투자 중인 코인들의 최신 시황은 오른쪽 상단의 메뉴(☰)를 클릭하시면 확인하실 수 있습니다.</small>
     <canvas id="portfolioChart" style="width: 280px; height: 280; margin: 0 auto;"></canvas>
@@ -240,7 +240,7 @@
 
   <!-- ✅ Add High Risk Chart block right here -->
   <div class="analysis-container" style="margin-top: 40px; text-align: center;">
-    <h3 style="color: #ff4d4d;">SQ Lab's High Risk Crypto Picks</h3>
+    <h3 style="color: #ff4d4d;">High Risk Crypto Picks</h3>
     <small>📅 최근 업데이트: 2025.04.15</small><br>
     <small>해당 포트폴리오는 변동성이 매우 높고, 원금 손실 가능성이 크므로 신중히 접근하시기 바랍니다.</small>
     <canvas id="highRiskChart" style="width: 280; height: 280; margin: 0 auto; margin-top: 20px;"></canvas>
@@ -248,8 +248,8 @@
 
   <!-- ✅ 미국 주식 포트폴리오 섹션 -->
   <div class="analysis-container" style="margin-top: 40px; text-align: center;">
-    <h3 style="color: #00ccff;">SQ Lab's U.S. Stock Portfolio</h3>
-    <small>📅 최근 업데이트: 2025.04.15</small><br>
+    <h3 style="color: #00ccff;">U.S. Stock Portfolio</h3>
+    <small>📅 최근 업데이트: 2025.05.30</small><br>
     <small>AI/데이터, 채굴주 중심의 집중 포트폴리오입니다. 장기 성장성과 리스크를 동시에 고려한 구성입니다.</small><br>
     <small>주기적으로 업데이트할 예정입니다.</small>
     <canvas id="usStockChart" style="width: 280px; height: 280; margin: 0 auto; margin-top: 20px;"></canvas>
@@ -493,9 +493,9 @@
     const usStockChart = new Chart(usStockCtx, {
       type: 'pie',
       data: {
-        labels: ['PLTR', 'MSTR', 'TSLA', 'HUT', 'RIOT', 'NFLX', 'OXY', 'XOM'],
+        labels: ['PLTR', 'MSTR', 'HUT', 'RIOT', 'CCJ', 'OKLO', 'SMR'],
         datasets: [{
-          data: [40, 10, 10, 10, 10, 10, 5, 5],
+          data: [20, 20, 12, 12, 12, 12, 12],
           backgroundColor: [
             '#ff9900', '#ffcc00', '#cc0000', '#00cccc',
             '#3399ff', '#e50914', '#666633', '#003366'
